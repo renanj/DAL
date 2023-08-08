@@ -451,7 +451,7 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
         idx = strategy.select(budget)
         full_train_dataset.transform = train_transform # Re-enable any augmentation done during training
         sel_time = time.time() - sel_time
-        # print("Selection Time:", sel_time)
+        print("Selection Time:", sel_time)        
         # print("idx === ", idx, "\n")
 
         selected_unlabeled_points = Subset(unlabeled_dataset, idx)
@@ -482,6 +482,7 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
         logs['Selection Time'] = str(sel_time)
         logs['Trainining Time'] = str(t2 - t1)
         logs['Training'] = train_logs
+        print("Training Time:", str(t2 - t1))
 
 
         write_logs(logs, save_directory, rd)
@@ -492,7 +493,7 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
         used_indices = np.array([x for x in range(initial_unlabeled_size)])
         used_indices = np.delete(used_indices, index_map).tolist()
 
-        print("used_indices === ", used_indices, "\n")
+        # print("used_indices === ", used_indices, "\n")
 
         round_checkpoint = Checkpoint(acc.tolist(), used_indices, clf.state_dict(), experiment_name=experiment_name)
         round_checkpoint.save_checkpoint(checkpoint_directory)
