@@ -18,6 +18,8 @@ import math
 import random
 import os
 import pickle
+import json
+
 
 from numpy.linalg import cond
 from numpy.linalg import inv
@@ -49,14 +51,23 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-def write_dict_to_file(my_dict, save_directory, pickle_file_name='my_dict.pkl'):
+# def write_dict_to_file(my_dict, save_directory, pickle_file_name='my_dict.pkl'):
+#     if not os.path.exists(save_directory):
+#         os.makedirs(save_directory)
+#     file_path = os.path.join(save_directory, pickle_file_name)
+#     with open(file_path, 'wb') as f:
+#         pickle.dump(my_dict, f)
+
+
+
+def write_dict_to_file(my_dict, save_directory, file_name):
     if not os.path.exists(save_directory):
         os.makedirs(save_directory)
-    file_path = os.path.join(save_directory, pickle_file_name)
-    with open(file_path, 'wb') as f:
-        pickle.dump(my_dict, f)
+    file_path = os.path.join(save_directory, file_name)
+    with open(file_path, 'w') as f:
+        json.dump(my_dict, f)
 
-def create_indices_dict(initial_train_indices, full_train_dataset, index_map, path_to_save=None):
+def create_indices_dict(initial_train_indices, full_train_dataset, index_map):
     # Initialize dictionary
     my_dict = {
         'indices_selected_original_dataset': {},
@@ -84,10 +95,7 @@ def create_indices_dict(initial_train_indices, full_train_dataset, index_map, pa
     selected_indices_original_dataset_flat_list = [item for sublist in selected_indices_original_dataset for item in sublist]
     my_dict['indices_selected_original_dataset_flat'] = selected_indices_original_dataset_flat_list
 
-    #Save to directory:
-    if path_to_save is not None:
-      write_dict_to_file(my_dict, save_directory=path_to_save)
-
+    
     return my_dict
 
 
@@ -328,7 +336,11 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
 
 
 
-    logs_dict = {}
+    logs_dict = {} #len_training_points, test_accuracy, test_selection_time, test_training_time
+    aux_training_logs_dict = {} #test_training_logs
+    aux_indices_logs_dict = {} #index_map, strategy_select_idx, remaining_unlabeled_indices, used_indices
+    aux_torch_datasets_logs_dict = {} # selected_unlabeled_points, train_dataset, unlabeled_dataset
+
 
     _temp_logs_index_map = [] #index_map
     _temp_logs_strategy_select_idx = []    #idx
@@ -519,34 +531,61 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
     print('Training Completed')
 
 
-    logs_dict['index_map'] = _temp_logs_index_map
-    logs_dict['strategy_select_idx'] = _temp_logs_strategy_select_idx
-    logs_dict['selected_unlabeled_points'] = _temp_logs_selected_unlabeled_points
-    logs_dict['train_dataset'] = _temp_logs_train_dataset
-    logs_dict['remaining_unlabeled_indices'] = _temp_logs_remaining_unlabeled_indices
-    logs_dict['unlabeled_dataset'] = _temp_logs_unlabeled_dataset
-    logs_dict['used_indices'] = _temp_logs_used_indices
     logs_dict['len_training_points'] = _temp_logs_training_points
     logs_dict['test_accuracy'] = _temp_logs_test_accuracy
     logs_dict['test_selection_time'] = _temp_logs_test_selection_time
     logs_dict['test_training_time'] = _temp_logs_test_training_time
-    logs_dict['test_training_logs'] = _temp_logs_test_training_logs
 
-    write_dict_to_file(logs_dict, save_dict_directory, pickle_file_name='logs_dict.pkl')
 
+    aux_indices_logs_dict['index_map'] = _temp_logs_index_map
+    aux_indices_logs_dict['strategy_select_idx'] = _temp_logs_strategy_select_idx
+    aux_indices_logs_dict['remaining_unlabeled_indices'] = _temp_logs_remaining_unlabeled_indices
+    aux_indices_logs_dict['used_indices'] = _temp_logs_used_indices
+
+
+    aux_training_logs_dict['test_training_logs'] = _temp_logs_test_training_logs
+
+
+    aux_torch_datasets_logs_dict['selected_unlabeled_points'] = _temp_logs_selected_unlabeled_points
+    aux_torch_datasets_logs_dict['train_dataset'] = _temp_logs_train_dataset    
+    aux_torch_datasets_logs_dict['unlabeled_dataset'] = _temp_logs_unlabeled_dataset
+    
+    
+
+    try: 
+        write_dict_to_file(logs_dict, save_dict_directory, file_name='logs_dict.json')
+    except: 
+        print("not possible to write logs_dict")
+
+    try: 
+        write_dict_to_file(aux_indices_logs_dict, save_dict_directory, file_name='aux_indices_logs_dict.json')
+    except: 
+        print("not possible to write aux_indices_logs_dict")
+
+    try: 
+        write_dict_to_file(aux_training_logs_dict, save_dict_directory, file_name='aux_training_logs_dict.json')
+    except: 
+        print("not possible to write aux_training_logs_dict")
+
+    try: 
+        write_dict_to_file(aux_torch_datasets_logs_dict, save_dict_directory, file_name='aux_torch_datasets_logs_dict.json')
+    except: 
+        print("not possible to write aux_torch_datasets_logs_dict")                        
 
 
     if save_dict_directory is not None:
 
-      my_dict = create_indices_dict(
-            initial_train_indices = initial_train_indices,
-            full_train_dataset = full_train_dataset,
-            index_map = logs_dict['index_map'],
-            path_to_save=save_dict_directory)
+        try:
 
+            used_indices_dict = create_indices_dict(
+                initial_train_indices = initial_train_indices,
+                full_train_dataset = full_train_dataset,
+                index_map = logs_dict['index_map'])
 
-
-      return acc, my_dict, logs_dict
+            return acc, used_indices_dict, logs_dict
+        except:
+            print("Not possible to create used_indices_dict dictionary")
+            return acc
 
     return acc, logs_dict        
 
