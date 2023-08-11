@@ -16,47 +16,154 @@ import seaborn as sns
 from matplotlib.patches import Rectangle, ConnectionPatch
 
 
-def find_paths(parent_directory):
 
-    _list = []
-    for root, dirs, files in os.walk(parent_directory):
-        for dir in dirs:
-            # print(os.path.join(root, dir))
-            _list.append(os.path.join(root, dir))
-
-    return _list
+import os
+import pickle
+import pandas as pd
+import json
 
 
+##### Dataframe
 
+def find_paths(directory):
+    return [os.path.join(directory, d) for d in os.listdir(directory) if os.path.isdir(os.path.join(directory, d))]
 
-def find_subdirectories_names(parent_directory):
-    _list = []
-    for root, dirs, files in os.walk(parent_directory):
-        for dir in dirs:
-            # print(dir)
-            _list.append(dir)
-
-    return _list
+def find_subdirectories_names(directory):
+    return [d for d in os.listdir(directory) if os.path.isdir(os.path.join(directory, d))]
 
 
 
+def process_experiment_path(path):
+    split_path = path.split('/')
+    _experiment = split_path[-1]
+    database_name = split_path[-2]  # Extracting the database name from the path
 
+    _list_paths = find_paths(path)
+    _list_strategies = find_subdirectories_names(path)
 
+    _list_dfs = []
+    error_paths = []  # To store paths where files couldn't be opened
 
-def convert_to_hours_and_minutes(value):
-    if isinstance(value, str):
-        return value
+    for i in range(len(_list_paths)):
+        try:
+            pkl_file_name = os.path.join(_list_paths[i], 'logs_dict.pkl')
+            json_file_name = os.path.join(_list_paths[i], 'logs_dict.json')
 
-    hours = value // 60
-    minutes = value % 60
+            # Check which file exists and load accordingly
+            if os.path.exists(pkl_file_name):
+                with open(pkl_file_name, 'rb') as handle:
+                    dict_random = pickle.load(handle)
+            elif os.path.exists(json_file_name):
+                with open(json_file_name, 'r') as handle:
+                    dict_random = json.load(handle)
+            else:
+                error_paths.append(_list_paths[i])  # If neither file exists, add to error paths
+                continue  # Skip the current iteration as no valid file was found
 
-    if hours > 0:
-        return f"{int(hours)} Hour(s) and {int(minutes)} Minute(s)"
+            database = database_name
+            strategy = _list_strategies[i]
+
+            rounds = list(range(1, len(dict_random['test_training_time']) + 1))
+            dict_list = [
+                [database] * len(rounds),
+                [_experiment] * len(rounds),
+                [strategy] * len(rounds),
+                rounds,
+                dict_random['len_training_points'],
+                dict_random['test_accuracy'],
+                dict_random['test_selection_time'],
+                dict_random['test_training_time'],
+            ]
+
+            # Create DataFrame
+            df = pd.DataFrame(dict_list)
+            df = df.T
+            df.columns = ['database', 'experiment', 'strategy', 'rounds', 'len_training_points', 'test_accuracy', 'test_selection_time', 'test_training_time']
+
+            df['rounds'] = df['rounds'].astype(int)
+            df['len_training_points'] = df['len_training_points'].astype(int)
+            df['test_accuracy'] = df['test_accuracy'].astype(float)
+            df['test_selection_time'] = df['test_selection_time'].astype(float)
+            df['test_training_time'] = df['test_training_time'].astype(float)
+
+            _list_dfs.append(df)
+        except Exception as e:
+            print(f"Error encountered: {e}")  # This will print the specific error
+            error_paths.append(_list_paths[i])  # Add the current path to error paths due to the exception
+
+    if error_paths:  # Check if there were any errors
+        print("Error paths:", error_paths)
+
+    if _list_dfs:  # Check if the list is not empty
+        return pd.concat(_list_dfs)
     else:
-        return f"{int(minutes)} Minute(s)"
+        return None  # Return None or an empty DataFrame if you prefer: pd.DataFrame()
 
 
-def time_calculation(df):
+
+
+def process_path(_path):
+    dfs = []  # This will hold all the dataframes created
+
+
+    # Split the path into its components
+    components = _path.split('/')
+    # Removing the empty strings from the split result
+    components = [comp for comp in components if comp]
+
+    # Count the number of subdirectories beyond 'dict'
+    if 'dict' in components:
+        subdirs_beyond_dict = len(components) - components.index('dict') - 1
+    else:
+        return "Path is not in the expected pattern."
+
+    # Differentiate based on the count
+    if subdirs_beyond_dict == 0:
+      print("This is the dicts path.")
+      for database_path in find_paths(_path):
+          for experiment_path in find_paths(database_path):
+              df = process_experiment_path(experiment_path)
+              if df is not None:
+                  dfs.append(df)
+      return pd.concat(dfs) if dfs else None        
+
+    elif subdirs_beyond_dict == 1:
+      print("This is the database path.") 
+      # Database path
+      for experiment_path in find_paths(_path):
+          df = process_experiment_path(experiment_path)
+          if df is not None:
+              dfs.append(df)
+      return pd.concat(dfs) if dfs else None        
+
+
+    elif subdirs_beyond_dict == 2:
+        print("This is the experiment path.")
+        df = process_experiment_path(_path)
+        return df
+
+    else:
+      print("Path pattern is not recognized." )
+      return None
+
+
+
+
+def df_grouped_by_time(df):
+
+
+    def convert_to_hours_and_minutes(value):
+        if isinstance(value, str):
+            return value
+
+        hours = value // 60
+        minutes = value % 60
+
+        if hours > 0:
+            return f"{int(hours)} Hour(s) and {int(minutes)} Minute(s)"
+        else:
+            return f"{int(minutes)} Minute(s)"  
+
 
     def p80(x):
         return np.percentile(x, 80)
@@ -95,9 +202,11 @@ def time_calculation(df):
     # Replace NaNs with 'Not Available'
     grouped.fillna('Not Available', inplace=True)
 
-    return grouped
+    return grouped    
 
 
+
+##### Visualization
 
 
 def plot_accuracy_over_interactions(df):
@@ -132,7 +241,6 @@ def plot_accuracy_over_interactions(df):
 
     plt.tight_layout()
     plt.show()
-
 
 
 
