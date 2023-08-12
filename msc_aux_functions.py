@@ -412,6 +412,8 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
 
         dt = data_train(train_dataset, net, args)
 
+        
+
     else:
 
         if torch.cuda.is_available():
@@ -577,7 +579,7 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
 
         try:
 
-            ESTA DANDO ERRO AQUI!!!! TEM QUE REVER!!!!
+            # ESTA DANDO ERRO AQUI!!!! TEM QUE REVER!!!!
 
             used_indices_dict = create_indices_dict(
                 initial_train_indices = initial_train_indices,
