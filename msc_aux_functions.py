@@ -282,7 +282,7 @@ def write_logs(logs, save_directory, rd):
         f.write(str(key) + ' - '+ str(val) +'\n')
 
 
-def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_rounds, budget, args, nclasses, strategy, save_directory, checkpoint_directory, experiment_name, save_dict_directory=None):
+def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_rounds, budget, args, nclasses, strategy, save_directory, checkpoint_directory, experiment_name, save_dict_directory=None, _list_weights=None):
 
     # Split the full training dataset into an initial training dataset and an unlabeled dataset
     train_dataset = Subset(full_train_dataset, initial_train_indices)
@@ -412,7 +412,7 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
 
         dt = data_train(train_dataset, net, args)
 
-        
+
 
     else:
 
@@ -497,6 +497,17 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
         logs['Trainining Time'] = str(t2 - t1)
         logs['Training'] = train_logs
         print("Training Time:", str(t2 - t1))
+
+
+
+        def save_model_weights(model):
+            """Saves the model weights."""
+            return {k: v.clone() for k, v in model.state_dict().items()}
+
+        if _list_weights is not None:
+            print("saving weights...")
+            _list_weights.append(save_model_weights(clf))
+
 
 
         write_logs(logs, save_directory, rd)
@@ -591,9 +602,10 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
             return acc, logs_dict, used_indices_dict
         except:
             print("Not possible to create used_indices_dict dictionary")
-            return acc
+            return acc, _list_weights
 
-    return acc, logs_dict        
+    
+    return acc, logs_dict, _list_weights        
 
 
 

@@ -42,6 +42,6 @@ class CustomResNet18(nn.Module):
     def forward(self, x):
         return self.model(x)
 
-# Example usage:
-model = CustomResNet18(num_classes=10, channels=3, freeze_method='pre_trained_unfreeze_top_layer', layers_to_unfreeze=['layer3', 'layer4'])
-print(model)
+# # Example usage:
+# model = CustomResNet18(num_classes=10, channels=3, freeze_method='pre_trained_unfreeze_top_layer', layers_to_unfreeze=['layer3', 'layer4'])
+# print(model)
