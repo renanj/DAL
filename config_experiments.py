@@ -52,6 +52,90 @@ class ConfigExperiments:
             ]
 
         # LROOT_V4
+
+        if self.experiment_name == 'LRootV4_Baseline_HighEpochs':
+            self.data_set_name = 'LRootV4'
+            self.experiment_name = 'LRootV4_Baseline_HighEpochs'
+            self.nclasses = 30
+            self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
+            self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
+
+
+            self.initial_seed_size = 5000
+            self.budget_list = [2500]
+            self.training_size_cap = 20000
+            self.model = 'Custom_VGG11'
+            self.model_freeze_method = 'pre_trained_unfreeze_partial_last_layers'
+
+
+            self.args = [{'n_epoch': 150, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_partial_last_layers', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
+
+
+            self.data_augumentation = False
+            self.train_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])                
+            ])
+            self.test_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+            self.strategy_list = [
+                'random', 'margin', 'least_confidence','entropy','badge','batch_bald'                        
+            ]
+
+                
+        if self.experiment_name == 'LRootV4_Baseline_DataAugumentation_HighEpochs':
+            self.data_set_name = 'LRootV4'
+            self.experiment_name = 'LRootV4_Baseline_DataAugumentation_HighEpochs'
+            self.nclasses = 30
+            self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
+            self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
+
+
+            self.initial_seed_size = 5000
+            self.budget_list = [2500]
+            self.training_size_cap = 20000
+            self.model = 'Custom_VGG11'
+            self.model_freeze_method = 'pre_trained_unfreeze_partial_last_layers'
+
+
+            self.args = [{'n_epoch': 150, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_partial_last_layers', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
+
+
+            self.data_augumentation = True
+            self.train_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.RandomHorizontalFlip(p=1),
+                transforms.RandomRotation(degrees=30),
+                transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+            self.test_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+            self.strategy_list = [
+                'random', 'margin', 'least_confidence','entropy','badge','batch_bald'                        
+            ]
+                
+
+
+
+
+
         if self.experiment_name == 'LRootV4_Baseline':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_Baseline'
