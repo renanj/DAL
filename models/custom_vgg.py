@@ -6,7 +6,7 @@ class CustomVGG(nn.Module):
     def __init__(self, num_classes=10, channels=3, architecture='vgg11', freeze_method=None):
         super(CustomVGG, self).__init__()
 
-         self.embDim = 512
+        self.embDim = 512
 
         if architecture == 'vgg11':
             self.model = models.vgg11(pretrained=True)
