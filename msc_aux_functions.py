@@ -594,7 +594,7 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
             used_indices_dict = create_indices_dict(
                 initial_train_indices = initial_train_indices,
                 full_train_dataset = full_train_dataset,
-                index_map = logs_dict['index_map'])
+                index_map = aux_indices_logs_dict['index_map'])
 
             write_dict_to_file(used_indices_dict, save_dict_directory, file_name='used_indices_dict.json')    
             
