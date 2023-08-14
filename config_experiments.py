@@ -30,7 +30,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -70,7 +70,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = True
@@ -110,7 +110,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -150,7 +150,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -190,7 +190,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -230,7 +230,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -270,7 +270,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -310,7 +310,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -350,7 +350,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -390,7 +390,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -430,7 +430,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -470,7 +470,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 50, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 50, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -510,7 +510,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 100, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 100, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -550,7 +550,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -590,7 +590,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = True
@@ -630,7 +630,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -670,7 +670,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -710,7 +710,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -750,7 +750,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -790,7 +790,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -830,7 +830,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -870,7 +870,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -910,7 +910,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -950,7 +950,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -990,7 +990,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 50, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 50, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1030,7 +1030,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 100, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 100, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1070,7 +1070,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1110,7 +1110,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = True
@@ -1150,7 +1150,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1190,7 +1190,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1230,7 +1230,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1270,7 +1270,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1310,7 +1310,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1350,7 +1350,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1390,7 +1390,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1430,7 +1430,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1470,7 +1470,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1510,7 +1510,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 50, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 50, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False
@@ -1550,7 +1550,7 @@ class ConfigExperiments:
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
-            self.args = [{'n_epoch': 100, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'isreset': True}]
+            self.args = [{'n_epoch': 100, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
             self.data_augumentation = False

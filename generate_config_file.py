@@ -50,13 +50,17 @@ self.strategy_list = [
         block.append(f"            self.model_freeze_method = '{row['Freeze-Method']}'")
         # block.append(f"            self.fine_tuning = {row['fine_tuning']}")
         block.append('\n')
-        block.append(f"            self.args = [{{'n_epoch': {row['epochs']}, 'lr': {float(row['Learning Rate'])}, 'batch_size': {row['batch_size']}, 'max_accuracy': {float(row['max accuracy'])}, 'freeze_method': '{row['Freeze-Method']}', 'isreset': {row['is_reset (model)? ']}}}]")
+        block.append(f"            self.args = [{{'n_epoch': {row['epochs']}, 'lr': {float(row['Learning Rate'])}, 'batch_size': {row['batch_size']}, 'max_accuracy': {float(row['max accuracy'])}, 'freeze_method': '{row['Freeze-Method']}', 'islogs': {True}, 'isverbose': {True}, 'device': 'cuda',  'isreset': {row['is_reset (model)? ']} }}]")
         block.append('\n')
         block.append(f"            self.data_augumentation = {row['Data Agumentation']}")        
         # Add the additional content here
         block.extend(["            "+line for line in additional_content_inside_if.split('\n') if line])
 
         code_blocks.append('\n'.join(block))
+
+
+
+
 
 
 
