@@ -25,7 +25,7 @@ class ConfigExperiments:
 
             self.initial_seed_size = 5000
             self.budget_list = [500]
-            self.training_size_cap = 70000
+            self.training_size_cap = 7000
             self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
