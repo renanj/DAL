@@ -13,7 +13,6 @@ class ConfigExperiments:
         self.checkpoint_directory = '/content/drive/MyDrive/Colab_Notebooks/Experimentos_Mestrado/colab_storage/check/'
         self.model_directory = "/content/drive/MyDrive/Colab_Notebooks/Experimentos_Mestrado/colab_storage/model/"
         self.dict_directory = "/content/drive/MyDrive/Colab_Notebooks/Experimentos_Mestrado/colab_storage/dict/"
-
         
         if self.experiment_name == 'teste':
             self.data_set_name = 'LRootV4'
