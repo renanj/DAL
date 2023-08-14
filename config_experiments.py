@@ -14,7 +14,45 @@ class ConfigExperiments:
         self.model_directory = "/content/drive/MyDrive/Colab_Notebooks/Experimentos_Mestrado/colab_storage/model/"
         self.dict_directory = "/content/drive/MyDrive/Colab_Notebooks/Experimentos_Mestrado/colab_storage/dict/"
 
-        # Generated blocks    
+        # Generated blocks  
+        if self.experiment_name == 'LRootV4_teste':
+            self.data_set_name = 'LRootV4'
+            self.experiment_name = 'LRootV4_teste'
+            self.nclasses = 30
+            self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
+            self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
+
+
+            self.initial_seed_size = 5000
+            self.budget_list = [500]
+            self.training_size_cap = 70000
+            self.model = 'Custom_VGG11'
+            self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
+
+
+            self.args = [{'n_epoch': 5, 'lr': 0.1, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
+
+
+            self.data_augumentation = False
+            self.train_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+            ])
+            self.test_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+            ])
+            self.strategy_list = [
+                'random', 'margin'
+            ]
+                
+
         if self.experiment_name == 'LRootV4_Baseline':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_Baseline'

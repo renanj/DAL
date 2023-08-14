@@ -586,7 +586,7 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
     except: 
         print("not possible to write aux_torch_datasets_logs_dict")                        
 
-
+    
     if save_dict_directory is not None:
 
         try:            
@@ -601,11 +601,14 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
         except:
             print("Not possible to create used_indices_dict dictionary")
             used_indices_dict = None                        
+    else:
+            used_indices_dict = None
 
-    return acc, logs_dict, used_indices_dict, weights_after_rounds, 
+    return acc, logs_dict, used_indices_dict, weights_after_rounds
 
 
     
+
 
 
 
