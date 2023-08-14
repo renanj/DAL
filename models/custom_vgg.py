@@ -6,6 +6,8 @@ class CustomVGG(nn.Module):
     def __init__(self, num_classes=10, channels=3, architecture='vgg11', freeze_method=None):
         super(CustomVGG, self).__init__()
 
+         self.embDim = 512
+
         if architecture == 'vgg11':
             self.model = models.vgg11(pretrained=True)
         elif architecture == 'vgg16':
@@ -48,3 +50,23 @@ class CustomVGG(nn.Module):
 
     def forward(self, x):
         return self.model(x)
+
+
+    def _make_layers(self, cfg):
+        layers = []
+        in_channels = 3
+        for x in cfg:
+            if x == 'M':
+                layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
+            else:
+                layers += [nn.Conv2d(in_channels, x, kernel_size=3, padding=1),
+                           nn.BatchNorm2d(x),
+                           nn.ReLU(inplace=True)]
+                in_channels = x
+        layers += [nn.AvgPool2d(kernel_size=1, stride=1)]
+        return nn.Sequential(*layers)
+
+
+
+    def get_embedding_dim(self):
+        return self.embDim        
