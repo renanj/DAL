@@ -284,6 +284,13 @@ def write_logs(logs, save_directory, rd):
 
 def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_rounds, budget, args, nclasses, strategy, save_directory, checkpoint_directory, experiment_name, save_dict_directory=None):
 
+
+
+    # Placeholder dictionary to save weights after each round
+    weights_after_rounds = {}
+    weights_after_rounds[0] = copy.deepcopy(net.state_dict()) #Salve os pesos do warm start tem que ser iugal a do ciclor warm start
+
+
     # Split the full training dataset into an initial training dataset and an unlabeled dataset
     train_dataset = Subset(full_train_dataset, initial_train_indices)
     initial_unlabeled_indices = list(set(range(len(full_train_dataset))) - set(initial_train_indices))
@@ -504,6 +511,10 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
         strategy.update_model(clf)
         print('Testing accuracy:', round(acc[rd]*100, 2), flush=True)
 
+
+        print("\n Saving weights... \n !!!!!!!!!!!!! \n")
+        weights_after_rounds[rd] = copy.deepcopy(clf.state_dict())        
+
         # Create a checkpoint
         used_indices = np.array([x for x in range(initial_unlabeled_size)])
         used_indices = np.delete(used_indices, index_map).tolist()
@@ -586,14 +597,15 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
                 index_map = logs_dict['index_map'])
 
             write_dict_to_file(used_indices_dict, save_dict_directory, file_name='used_indices_dict.json')    
-            return acc, logs_dict, used_indices_dict
+            
         except:
             print("Not possible to create used_indices_dict dictionary")
-            return acc, logs_dict, None
+            used_indices_dict = None                        
+
+    return acc, logs_dict, used_indices_dict, weights_after_rounds, 
+
 
     
-    return acc, logs_dict, None
-
 
 
 
