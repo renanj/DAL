@@ -578,17 +578,14 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
 
     if save_dict_directory is not None:
 
-        try:
-
+        try:            
             # ESTA DANDO ERRO AQUI!!!! TEM QUE REVER!!!!
-
             used_indices_dict = create_indices_dict(
                 initial_train_indices = initial_train_indices,
                 full_train_dataset = full_train_dataset,
                 index_map = logs_dict['index_map'])
 
-            write_dict_to_file(used_indices_dict, save_dict_directory, file_name='used_indices_dict.json')
-    
+            write_dict_to_file(used_indices_dict, save_dict_directory, file_name='used_indices_dict.json')    
             return acc, logs_dict, used_indices_dict
         except:
             print("Not possible to create used_indices_dict dictionary")
