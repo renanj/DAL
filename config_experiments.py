@@ -14,10 +14,10 @@ class ConfigExperiments:
         self.model_directory = "/content/drive/MyDrive/Colab_Notebooks/Experimentos_Mestrado/colab_storage/model/"
         self.dict_directory = "/content/drive/MyDrive/Colab_Notebooks/Experimentos_Mestrado/colab_storage/dict/"
 
-        # Generated blocks  
-        if self.experiment_name == 'LRootV4_teste':
+        
+        if self.experiment_name == 'teste':
             self.data_set_name = 'LRootV4'
-            self.experiment_name = 'LRootV4_teste'
+            self.experiment_name = 'teste'
             self.nclasses = 30
             self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
             self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
@@ -39,20 +39,20 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
                 'random', 'margin'
             ]
-                
 
+        # LROOT_V4
         if self.experiment_name == 'LRootV4_Baseline':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_Baseline'
@@ -77,20 +77,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])                
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'least_confidence','entropy','badge','batch_bald'                        
             ]
                 
         if self.experiment_name == 'LRootV4_Baseline_DataAugumentation':
@@ -116,21 +113,21 @@ class ConfigExperiments:
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
+                transforms.RandomHorizontalFlip(p=1),
+                transforms.RandomRotation(degrees=30),
+                transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'least_confidence','entropy','badge','batch_bald'                        
             ]
                 
         if self.experiment_name == 'LRootV4_Baseline_LowData':
@@ -157,14 +154,14 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
                 'random', 'margin', 'badge', 'bald', 'batch_bald',        
@@ -190,21 +187,23 @@ class ConfigExperiments:
 
             self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
-
             self.data_augumentation = False
             self.train_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
+                transforms.RandomHorizontalFlip(p=1),
+                transforms.RandomRotation(degrees=30),
+                transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
                 'random', 'margin', 'badge', 'bald', 'batch_bald',        
@@ -237,20 +236,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_BatchSize3000':
@@ -277,20 +273,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_BatchSize6000':
@@ -317,20 +310,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_LowData_BatchSize100':
@@ -357,20 +347,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_LowData_BatchSize250':
@@ -397,20 +384,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_LowData_BatchSize500':
@@ -437,20 +421,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_Epochs10':
@@ -477,20 +458,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_Epochs50':
@@ -517,22 +495,19 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
-                
+        
         if self.experiment_name == 'LRootV4_LRootV4_Epochs100':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_LRootV4_Epochs100'
@@ -557,22 +532,20 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
-                
+
+        #ASLO
         if self.experiment_name == 'ASLO_Baseline':
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_Baseline'
@@ -597,20 +570,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'least_confidence','entropy','badge','batch_bald'                        
             ]
                 
         if self.experiment_name == 'ASLO_Baseline_DataAugumentation':
@@ -636,21 +606,21 @@ class ConfigExperiments:
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
+                transforms.RandomHorizontalFlip(p=1),
+                transforms.RandomRotation(degrees=30),
+                transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'least_confidence','entropy','badge','batch_bald'                        
             ]
                 
         if self.experiment_name == 'ASLO_Baseline_LowData':
@@ -677,14 +647,14 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
                 'random', 'margin', 'badge', 'bald', 'batch_bald',        
@@ -716,15 +686,18 @@ class ConfigExperiments:
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
+                transforms.RandomHorizontalFlip(p=1),
+                transforms.RandomRotation(degrees=30),
+                transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
                 'random', 'margin', 'badge', 'bald', 'batch_bald',        
@@ -757,20 +730,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'ASLO_LRootV4_BatchSize300':
@@ -797,20 +767,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'ASLO_LRootV4_BatchSize500':
@@ -837,20 +804,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'ASLO_LRootV4_LowData_BatchSize5':
@@ -877,20 +841,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'ASLO_LRootV4_LowData_BatchSize10':
@@ -917,20 +878,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'ASLO_LRootV4_LowData_BatchSize25':
@@ -957,20 +915,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'ASLO_LRootV4_Epochs10':
@@ -997,20 +952,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'ASLO_LRootV4_Epochs50':
@@ -1037,20 +989,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'ASLO_LRootV4_Epochs100':
@@ -1077,22 +1026,21 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
+
+        #MNIST
         if self.experiment_name == 'MNIST_Baseline':
             self.data_set_name = 'MNIST'
             self.experiment_name = 'MNIST_Baseline'
@@ -1117,20 +1065,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'least_confidence','entropy','badge','batch_bald'                        
             ]
                 
         if self.experiment_name == 'MNIST_Baseline_DataAugumentation':
@@ -1156,21 +1101,21 @@ class ConfigExperiments:
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
+                transforms.RandomHorizontalFlip(p=1),
+                transforms.RandomRotation(degrees=30),
+                transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'least_confidence','entropy','badge','batch_bald'                        
             ]
                 
         if self.experiment_name == 'MNIST_Baseline_LowData':
@@ -1197,14 +1142,14 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
                 'random', 'margin', 'badge', 'bald', 'batch_bald',        
@@ -1236,15 +1181,18 @@ class ConfigExperiments:
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
+                transforms.RandomHorizontalFlip(p=1),
+                transforms.RandomRotation(degrees=30),
+                transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
                 'random', 'margin', 'badge', 'bald', 'batch_bald',        
@@ -1277,20 +1225,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'MNIST_LRootV4_BatchSize3000':
@@ -1317,20 +1262,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'MNIST_LRootV4_BatchSize6000':
@@ -1357,20 +1299,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'MNIST_LRootV4_LowData_BatchSize1':
@@ -1397,20 +1336,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'MNIST_LRootV4_LowData_BatchSize10':
@@ -1437,20 +1373,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'MNIST_LRootV4_LowData_BatchSize25':
@@ -1477,20 +1410,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'MNIST_LRootV4_Epochs10':
@@ -1517,20 +1447,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'MNIST_LRootV4_Epochs50':
@@ -1557,20 +1484,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                 
         if self.experiment_name == 'MNIST_LRootV4_Epochs100':
@@ -1597,20 +1521,17 @@ class ConfigExperiments:
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.test_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
                 transforms.Resize((224, 224)),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.7928, 0.7928, 0.7928], std=[0.1688, 0.1688, 0.1688])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'bald', 'batch_bald',        
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
+                'random', 'margin', 'badge', 'batch_bald'
             ]
                     
 

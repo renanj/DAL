@@ -46,6 +46,8 @@ from distil.active_learning_strategies.batch_bald import BatchBALDDropout
 from distil.utils.train_helper import data_train
 from distil.utils.utils import LabeledToUnlabeledDataset
 
+from datetime import datetime
+
 from google.colab import drive
 import warnings
 warnings.filterwarnings("ignore")
@@ -60,12 +62,23 @@ warnings.filterwarnings("ignore")
 
 
 
+
+def default_serializer(obj):
+    """Custom JSON serializer for objects not serializable by default json code."""
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, datetime):
+        return obj.isoformat()
+    return str(obj)
+
 def write_dict_to_file(my_dict, save_directory, file_name):
     if not os.path.exists(save_directory):
         os.makedirs(save_directory)
     file_path = os.path.join(save_directory, file_name)
     with open(file_path, 'w') as f:
-        json.dump(my_dict, f)
+        json.dump(my_dict, f, default=default_serializer)
+
+
 
 def create_indices_dict(initial_train_indices, full_train_dataset, index_map):
     # Initialize dictionary
@@ -97,6 +110,119 @@ def create_indices_dict(initial_train_indices, full_train_dataset, index_map):
 
     
     return my_dict
+
+
+
+
+
+
+
+def get_dataset(data_set_name, dataset_root_path='../downloaded_data/', data_augumentation=False, train_transform=None, test_transform=None, nclasses=None, custom_train_root=None, custom_test_root=None):
+
+    if data_set_name == "CIFAR10":
+
+        if train_transform == None:
+            if data_augumentation == True:
+                train_transform = transforms.Compose([transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip(), transforms.ToTensor(), transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])
+            else:
+                train_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])
+        else:
+            None
+
+        if test_transform == None:            
+                test_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])
+        else:
+            None
+   
+
+        full_train_dataset = datasets.CIFAR10(dataset_root_path, download=True, train=True, transform=train_transform, target_transform=torch.tensor)
+        test_dataset = datasets.CIFAR10(dataset_root_path, download=True, train=False, transform=test_transform, target_transform=torch.tensor)
+
+        nclasses = 10 # NUM CLASSES HERE
+
+    # elif data_set_name == "CIFAR100":
+
+        # if train_transform == None:
+        #     train_transform = transforms.Compose([transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip(), transforms.ToTensor(), transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))])
+        # if test_transform == None:
+        #     test_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))])
+
+        # full_train_dataset = datasets.CIFAR100(dataset_root_path, download=True, train=True, transform=train_transform, target_transform=torch.tensor)
+        # test_dataset = datasets.CIFAR100(dataset_root_path, download=True, train=False, transform=test_transform, target_transform=torch.tensor)
+
+        # nclasses = 100 # NUM CLASSES HERE
+
+    elif data_set_name == "MNIST":
+
+        image_dim=28
+
+        if train_transform == None:
+            if data_augumentation == True:
+                train_transform = transforms.Compose([transforms.RandomCrop(image_dim, padding=4), transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
+            else:
+                train_transform = transforms.Compose([transforms.Resize((image_dim, image_dim)), transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
+    
+        else:
+            None
+
+        if test_transform == None:            
+                test_transform = transforms.Compose([transforms.Resize((image_dim, image_dim)), transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
+        else:
+            None
+
+        full_train_dataset = datasets.MNIST(dataset_root_path, download=True, train=True, transform=train_transform, target_transform=torch.tensor)
+        test_dataset = datasets.MNIST(dataset_root_path, download=True, train=False, transform=test_transform, target_transform=torch.tensor)
+
+        nclasses = 10 # NUM CLASSES HERE
+
+    # elif data_set_name == "FashionMNIST":
+
+        # if train_transform == None:
+        #     train_transform = transforms.Compose([transforms.RandomCrop(28, padding=4), transforms.RandomHorizontalFlip(), transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
+        # if test_transform == None:
+        #     test_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]) # Use mean/std of MNIST
+
+        # full_train_dataset = datasets.FashionMNIST(dataset_root_path, download=True, train=True, transform=train_transform, target_transform=torch.tensor)
+        # test_dataset = datasets.FashionMNIST(dataset_root_path, download=True, train=False, transform=test_transform, target_transform=torch.tensor)
+
+        # nclasses = 10 # NUM CLASSES HERE
+
+    # elif data_set_name == "SVHN":
+
+        # if train_transform == None:
+        #     train_transform = transforms.Compose([transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip(), transforms.ToTensor(), transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
+        # if test_transform == None:
+        #     test_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]) # ImageNet mean/std
+
+        # full_train_dataset = datasets.SVHN(dataset_root_path, split='train', download=True, transform=train_transform, target_transform=torch.tensor)
+        # test_dataset = datasets.SVHN(dataset_root_path, split='test', download=True, transform=test_transform, target_transform=torch.tensor)
+
+        # nclasses = 10 # NUM CLASSES HERE
+
+    # elif data_set_name == "ImageNet":
+
+        # if train_transform == None:
+        #     train_transform = transforms.Compose([transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip(), transforms.ToTensor(), transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
+        # if test_transform == None:
+        #     test_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]) # ImageNet mean/std
+
+        # # Note: Not automatically downloaded due to size restrictions. Notebook needs to be adapted to run on local device.
+        # full_train_dataset = datasets.ImageNet(dataset_root_path, download=False, split='train', transform=train_transform, target_transform=torch.tensor)
+        # test_dataset = datasets.ImageNet(dataset_root_path, download=False, split='val', transform=test_transform, target_transform=torch.tensor)
+
+        # nclasses = 1000 # NUM CLASSES HERE
+
+
+    else:
+        print("Custom Dataset: ", data_set_name)
+        if not (train_transform and test_transform and nclasses and custom_train_root and custom_test_root):
+            raise ValueError("For custom datasets, train_transform, test_transform, nclasses, custom_train_root, and custom_test_root must be provided")
+        
+        full_train_dataset = datasets.ImageFolder(root=custom_train_root, transform=train_transform, target_transform=torch.tensor)
+        test_dataset = datasets.ImageFolder(root=custom_test_root, transform=test_transform, target_transform=torch.tensor)
+
+    
+    return full_train_dataset, test_dataset, nclasses    
 
 
 
@@ -586,11 +712,10 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
     except: 
         print("not possible to write aux_torch_datasets_logs_dict")                        
 
-    
+
     if save_dict_directory is not None:
 
-        try:            
-            # ESTA DANDO ERRO AQUI!!!! TEM QUE REVER!!!!
+        try:                        
             used_indices_dict = create_indices_dict(
                 initial_train_indices = initial_train_indices,
                 full_train_dataset = full_train_dataset,
@@ -605,116 +730,3 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
             used_indices_dict = None
 
     return acc, logs_dict, used_indices_dict, weights_after_rounds
-
-
-    
-
-
-
-
-def get_dataset(data_set_name, dataset_root_path='../downloaded_data/', data_augumentation=False, train_transform=None, test_transform=None, nclasses=None, custom_train_root=None, custom_test_root=None):
-
-    if data_set_name == "CIFAR10":
-
-        if train_transform == None:
-            if data_augumentation == True:
-                train_transform = transforms.Compose([transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip(), transforms.ToTensor(), transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])
-            else:
-                train_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])
-        else:
-            None
-
-        if test_transform == None:            
-                test_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])
-        else:
-            None
-   
-
-        full_train_dataset = datasets.CIFAR10(dataset_root_path, download=True, train=True, transform=train_transform, target_transform=torch.tensor)
-        test_dataset = datasets.CIFAR10(dataset_root_path, download=True, train=False, transform=test_transform, target_transform=torch.tensor)
-
-        nclasses = 10 # NUM CLASSES HERE
-
-    # elif data_set_name == "CIFAR100":
-
-        # if train_transform == None:
-        #     train_transform = transforms.Compose([transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip(), transforms.ToTensor(), transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))])
-        # if test_transform == None:
-        #     test_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))])
-
-        # full_train_dataset = datasets.CIFAR100(dataset_root_path, download=True, train=True, transform=train_transform, target_transform=torch.tensor)
-        # test_dataset = datasets.CIFAR100(dataset_root_path, download=True, train=False, transform=test_transform, target_transform=torch.tensor)
-
-        # nclasses = 100 # NUM CLASSES HERE
-
-    elif data_set_name == "MNIST":
-
-        image_dim=28
-
-        if train_transform == None:
-            if data_augumentation == True:
-                train_transform = transforms.Compose([transforms.RandomCrop(image_dim, padding=4), transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
-            else:
-                train_transform = transforms.Compose([transforms.Resize((image_dim, image_dim)), transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
-    
-        else:
-            None
-
-        if test_transform == None:            
-                test_transform = transforms.Compose([transforms.Resize((image_dim, image_dim)), transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
-        else:
-            None
-
-        full_train_dataset = datasets.MNIST(dataset_root_path, download=True, train=True, transform=train_transform, target_transform=torch.tensor)
-        test_dataset = datasets.MNIST(dataset_root_path, download=True, train=False, transform=test_transform, target_transform=torch.tensor)
-
-        nclasses = 10 # NUM CLASSES HERE
-
-    # elif data_set_name == "FashionMNIST":
-
-        # if train_transform == None:
-        #     train_transform = transforms.Compose([transforms.RandomCrop(28, padding=4), transforms.RandomHorizontalFlip(), transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
-        # if test_transform == None:
-        #     test_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]) # Use mean/std of MNIST
-
-        # full_train_dataset = datasets.FashionMNIST(dataset_root_path, download=True, train=True, transform=train_transform, target_transform=torch.tensor)
-        # test_dataset = datasets.FashionMNIST(dataset_root_path, download=True, train=False, transform=test_transform, target_transform=torch.tensor)
-
-        # nclasses = 10 # NUM CLASSES HERE
-
-    # elif data_set_name == "SVHN":
-
-        # if train_transform == None:
-        #     train_transform = transforms.Compose([transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip(), transforms.ToTensor(), transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
-        # if test_transform == None:
-        #     test_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]) # ImageNet mean/std
-
-        # full_train_dataset = datasets.SVHN(dataset_root_path, split='train', download=True, transform=train_transform, target_transform=torch.tensor)
-        # test_dataset = datasets.SVHN(dataset_root_path, split='test', download=True, transform=test_transform, target_transform=torch.tensor)
-
-        # nclasses = 10 # NUM CLASSES HERE
-
-    # elif data_set_name == "ImageNet":
-
-        # if train_transform == None:
-        #     train_transform = transforms.Compose([transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip(), transforms.ToTensor(), transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
-        # if test_transform == None:
-        #     test_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]) # ImageNet mean/std
-
-        # # Note: Not automatically downloaded due to size restrictions. Notebook needs to be adapted to run on local device.
-        # full_train_dataset = datasets.ImageNet(dataset_root_path, download=False, split='train', transform=train_transform, target_transform=torch.tensor)
-        # test_dataset = datasets.ImageNet(dataset_root_path, download=False, split='val', transform=test_transform, target_transform=torch.tensor)
-
-        # nclasses = 1000 # NUM CLASSES HERE
-
-
-    else:
-        print("Custom Dataset: ", data_set_name)
-        if not (train_transform and test_transform and nclasses and custom_train_root and custom_test_root):
-            raise ValueError("For custom datasets, train_transform, test_transform, nclasses, custom_train_root, and custom_test_root must be provided")
-        
-        full_train_dataset = datasets.ImageFolder(root=custom_train_root, transform=train_transform, target_transform=torch.tensor)
-        test_dataset = datasets.ImageFolder(root=custom_test_root, transform=test_transform, target_transform=torch.tensor)
-
-    
-    return full_train_dataset, test_dataset, nclasses
