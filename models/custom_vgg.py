@@ -52,10 +52,10 @@ class CustomVGG(nn.Module):
     def forward(self, x, last=False, freeze=False):
         if freeze:
             with torch.no_grad():
-                out = self.features(x)
+                out = self.model.features(x)
                 e = out.view(out.size(0), -1)
         else:
-            out = self.features(x)
+            out = self.model.features(x)
             e = out.view(out.size(0), -1)
         out = self.classifier(e)
         if last:
