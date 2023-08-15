@@ -48,8 +48,21 @@ class CustomVGG(nn.Module):
         for param in self.model.parameters():
             param.requires_grad = False
 
-    def forward(self, x):
-        return self.model(x)
+
+    def forward(self, x, last=False, freeze=False):
+        if freeze:
+            with torch.no_grad():
+                out = self.features(x)
+                e = out.view(out.size(0), -1)
+        else:
+            out = self.features(x)
+            e = out.view(out.size(0), -1)
+        out = self.classifier(e)
+        if last:
+            return out, e
+        else:
+            return out
+
 
 
     def _make_layers(self, cfg):
