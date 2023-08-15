@@ -628,8 +628,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_Baseline'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 300
@@ -665,8 +665,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_Baseline_DataAugumentation'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 300
@@ -705,8 +705,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_Baseline_LowData'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 50
@@ -746,8 +746,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_Baseline_LowData_DataAugumentation'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 50
@@ -790,8 +790,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_BatchSize100'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 300
@@ -827,8 +827,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_BatchSize300'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 300
@@ -864,8 +864,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_BatchSize500'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 300
@@ -901,8 +901,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_LowData_BatchSize5'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 50
@@ -938,8 +938,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_LowData_BatchSize10'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 50
@@ -975,8 +975,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_LowData_BatchSize25'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 50
@@ -1012,8 +1012,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_Epochs10'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 300
@@ -1049,8 +1049,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_Epochs50'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 300
@@ -1086,8 +1086,8 @@ class ConfigExperiments:
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_Epochs100'
             self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/trainning'
-            self.custom_test_root = '/content/ASLO/validation'
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 300
