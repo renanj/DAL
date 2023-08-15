@@ -87,7 +87,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'least_confidence','entropy','badge','batch_bald'                        
+                'random', 'margin', 'least_confidence','entropy','bald','batch_bald'                        
             ]
 
                 
@@ -128,7 +128,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'least_confidence','entropy','badge','batch_bald'                        
+                'random', 'margin', 'least_confidence','entropy','bald','batch_bald'                        
             ]
                 
 
