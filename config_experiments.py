@@ -134,8 +134,6 @@ class ConfigExperiments:
 
 
 
-
-
         if self.experiment_name == 'LRootV4_Baseline':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_Baseline'
@@ -294,7 +292,7 @@ class ConfigExperiments:
                 'entropy', 'least_confidence', 'coreset', 
                 'adversarial_bim', 'adversarial_deepfool'
             ]
-                
+        
         if self.experiment_name == 'LRootV4_LRootV4_BatchSize1000':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_LRootV4_BatchSize1000'
@@ -329,7 +327,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'batch_bald'
+                'random', 'margin', 'batch', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_BatchSize3000':
@@ -366,7 +364,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'batch_bald'
+                'random', 'margin', 'batch', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_BatchSize6000':
@@ -403,7 +401,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'batch_bald'
+                'random', 'margin', 'batch', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_LowData_BatchSize100':
@@ -440,7 +438,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'batch_bald'
+                'random', 'margin', 'batch', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_LowData_BatchSize250':
@@ -477,7 +475,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'batch_bald'
+                'random', 'margin', 'batch', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_LowData_BatchSize500':
@@ -514,7 +512,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'batch_bald'
+                'random', 'margin', 'batch', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_Epochs10':
@@ -551,7 +549,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'batch_bald'
+                'random', 'margin', 'batch', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_Epochs50':
@@ -588,7 +586,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'batch_bald'
+                'random', 'margin', 'batch', 'batch_bald'
             ]
         
         if self.experiment_name == 'LRootV4_LRootV4_Epochs100':
@@ -625,7 +623,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'badge', 'batch_bald'
+                'random', 'margin', 'batch', 'batch_bald'
             ]
 
         #ASLO
@@ -764,7 +762,7 @@ class ConfigExperiments:
             self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
-            self.data_augumentation = False
+            self.data_augumentation = True
             self.train_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
@@ -1259,7 +1257,7 @@ class ConfigExperiments:
             self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
-            self.data_augumentation = False
+            self.data_augumentation = True
             self.train_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
                 transforms.Lambda(lambda x: x.convert("RGB")),
