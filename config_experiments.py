@@ -323,7 +323,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald'
+                'random', 'margin', 'bald', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_BatchSize3000':
@@ -360,7 +360,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald'
+                'random', 'margin', 'bald', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_BatchSize6000':
@@ -397,7 +397,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald'
+                'random', 'margin', 'bald', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_LowData_BatchSize100':
@@ -434,7 +434,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald'
+                'random', 'margin', 'bald', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_LowData_BatchSize250':
@@ -471,7 +471,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald'
+                'random', 'margin', 'bald', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_LowData_BatchSize500':
@@ -508,7 +508,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald'
+                'random', 'margin', 'bald', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_Epochs10':
@@ -545,7 +545,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald'
+                'random', 'margin', 'bald', 'batch_bald'
             ]
                 
         if self.experiment_name == 'LRootV4_LRootV4_Epochs50':
@@ -582,7 +582,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald'
+                'random', 'margin', 'bald', 'batch_bald'
             ]
         
         if self.experiment_name == 'LRootV4_LRootV4_Epochs100':
@@ -619,7 +619,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald'
+                'random', 'margin', 'bald', 'batch_bald'
             ]
 
 
@@ -820,7 +820,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald', 'badge'
+                'random', 'margin', 'bald', 'batch_bald', 'badge'
             ]
                 
         if self.experiment_name == 'ASLO_BatchSize300':
@@ -857,7 +857,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald', 'badge'
+                'random', 'margin', 'bald', 'batch_bald', 'badge'
             ]
                 
         if self.experiment_name == 'ASLO_BatchSize500':
@@ -894,7 +894,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald', 'badge'
+                'random', 'margin', 'bald', 'batch_bald', 'badge'
             ]
                 
         if self.experiment_name == 'ASLO_LowData_BatchSize5':
@@ -931,7 +931,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald', 'badge'
+                'random', 'margin', 'bald', 'batch_bald', 'badge'
             ]
                 
         if self.experiment_name == 'ASLO_LowData_BatchSize10':
@@ -968,7 +968,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald', 'badge'
+                'random', 'margin', 'bald', 'batch_bald', 'badge'
             ]
                 
         if self.experiment_name == 'ASLO_LowData_BatchSize25':
@@ -1005,7 +1005,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-               'random', 'margin', 'batch', 'batch_bald', 'badge'
+               'random', 'margin', 'bald', 'batch_bald', 'badge'
             ]
                 
         if self.experiment_name == 'ASLO_Epochs10':
@@ -1042,7 +1042,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-               'random', 'margin', 'batch', 'batch_bald', 'badge'
+               'random', 'margin', 'bald', 'batch_bald', 'badge'
             ]
                 
         if self.experiment_name == 'ASLO_Epochs50':
@@ -1079,7 +1079,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald', 'badge'
+                'random', 'margin', 'bald', 'batch_bald', 'badge'
             ]
                 
         if self.experiment_name == 'ASLO_Epochs100':
@@ -1116,7 +1116,7 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'batch', 'batch_bald', 'badge'
+                'random', 'margin', 'bald', 'batch_bald', 'badge'
             ]
 
                 
