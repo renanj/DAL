@@ -39,9 +39,38 @@ class CustomResNet18(nn.Module):
         for param in self.model.parameters():
             param.requires_grad = False
 
-    def forward(self, x):
-        return self.model(x)
+
+    def forward(self, x, last=False, freeze=False):
+        if freeze:
+            with torch.no_grad():
+                out = F.relu(self.bn1(self.conv1(x)))
+                out = self.layer1(out)
+                out = self.layer2(out)
+                out = self.layer3(out)
+                out = self.layer4(out)
+                out = F.avg_pool2d(out, 4)
+                e = out.view(out.size(0), -1)
+        else:
+            out = F.relu(self.bn1(self.conv1(x)))
+            out = self.layer1(out)
+            out = self.layer2(out)
+            out = self.layer3(out)
+            out = self.layer4(out)
+            out = F.avg_pool2d(out, 4)
+            e = out.view(out.size(0), -1)
+        out = self.linear(e)
+        if last:
+            return out, e
+        else:
+            return out
+
+    def get_embedding_dim(self):
+        return self.embDim
+
 
 # # Example usage:
 # model = CustomResNet18(num_classes=10, channels=3, freeze_method='pre_trained_unfreeze_top_layer', layers_to_unfreeze=['layer3', 'layer4'])
 # print(model)
+
+
+
