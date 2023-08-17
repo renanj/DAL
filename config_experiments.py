@@ -10,7 +10,7 @@ class ConfigExperiments:
         self.experiment_name = experiment_name
         # Your initial attributes
         self.logs_directory = '/content/drive/MyDrive/Colab_Notebooks/Experimentos_Mestrado/colab_storage/logs/'
-        self.checkpoint_directory = '/content/drive/MyDrive/Colab_Notebooks/Experimentos_Mestrado/colab_storage/check/'
+        self.checkpoint_directory = '/content/drive/MyDrive/Colab_Notebooks/Experimentos_Mestradoz/colab_storage/check/'
         self.model_directory = "/content/drive/MyDrive/Colab_Notebooks/Experimentos_Mestrado/colab_storage/model/"
         self.dict_directory = "/content/drive/MyDrive/Colab_Notebooks/Experimentos_Mestrado/colab_storage/dict/"
         
@@ -786,16 +786,16 @@ class ConfigExperiments:
                 'adversarial_bim', 'adversarial_deepfool'
             ]
                 
-        if self.experiment_name == 'ASLO_BatchSize100':
+        if self.experiment_name == 'ASLO_BatchSize150':
             self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_BatchSize100'
+            self.experiment_name = 'ASLO_BatchSize150'
             self.nclasses = 22
             self.custom_train_root = '/content/ASLO/training'
             self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 300
-            self.budget_list = [100]
+            self.budget_list = [150]
             self.training_size_cap = 3300
             self.model = 'Custom_ResNet18'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
@@ -897,43 +897,6 @@ class ConfigExperiments:
                 'random', 'margin', 'bald', 'batch_bald', 'badge'
             ]
                 
-        if self.experiment_name == 'ASLO_LowData_BatchSize5':
-            self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_LowData_BatchSize5'
-            self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/training'
-            self.custom_test_root = '/content/ASLO/testing'
-
-
-            self.initial_seed_size = 50
-            self.budget_list = [5]
-            self.training_size_cap = 400
-            self.model = 'Custom_ResNet18'
-            self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
-
-
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
-
-
-            self.data_augumentation = False
-            self.train_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.test_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.strategy_list = [
-                'random', 'margin', 'bald', 'batch_bald', 'badge'
-            ]
-                
         if self.experiment_name == 'ASLO_LowData_BatchSize10':
             self.data_set_name = 'ASLO'
             self.experiment_name = 'ASLO_LowData_BatchSize10'
@@ -942,7 +905,7 @@ class ConfigExperiments:
             self.custom_test_root = '/content/ASLO/testing'
 
 
-            self.initial_seed_size = 50
+            self.initial_seed_size = 100
             self.budget_list = [10]
             self.training_size_cap = 400
             self.model = 'Custom_ResNet18'
@@ -979,8 +942,45 @@ class ConfigExperiments:
             self.custom_test_root = '/content/ASLO/testing'
 
 
-            self.initial_seed_size = 50
+            self.initial_seed_size = 100
             self.budget_list = [25]
+            self.training_size_cap = 400
+            self.model = 'Custom_ResNet18'
+            self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
+
+
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
+
+
+            self.data_augumentation = False
+            self.train_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+            self.test_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+            self.strategy_list = [
+                'random', 'margin', 'bald', 'batch_bald', 'badge'
+            ]
+                
+        if self.experiment_name == 'ASLO_LowData_BatchSize50':
+            self.data_set_name = 'ASLO'
+            self.experiment_name = 'ASLO_LowData_BatchSize50'
+            self.nclasses = 22
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
+
+
+            self.initial_seed_size = 100
+            self.budget_list = [50]
             self.training_size_cap = 400
             self.model = 'Custom_ResNet18'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
