@@ -753,7 +753,5 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
             used_indices_dict = None
 
 
-    except:
-        None
 
     return acc, logs_dict, used_indices_dict, weights_after_rounds
