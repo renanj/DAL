@@ -667,6 +667,29 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
         _temp_logs_original_dataset_selected_points.append(_selected_points_in_full_training_dataset)
 
 
+        def get_gpu_memory():
+            """Retorna o uso atual da memória da GPU em MB."""
+            result = subprocess.check_output(
+                ['nvidia-smi', '--query-gpu=memory.used', '--format=csv,nounits,noheader'],
+                encoding='utf-8'
+            )
+            return int(result.strip())
+
+        try:
+            # Antes de chamar empty_cache
+            mem_before = get_gpu_memory()
+            print(f"Memória da GPU antes de empty_cache: {mem_before} MB")
+
+            torch.cuda.empty_cache()
+
+            # Depois de chamar empty_cache
+            mem_after = get_gpu_memory()
+            print(f"Memória da GPU depois de empty_cache: {mem_after} MB")
+        except:
+            print(f"Coudn't run the GPU unfreezing")
+
+
+
 
     print('Training Completed')
 
@@ -730,25 +753,6 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
             used_indices_dict = None
 
 
-    def get_gpu_memory():
-        """Retorna o uso atual da memória da GPU em MB."""
-        result = subprocess.check_output(
-            ['nvidia-smi', '--query-gpu=memory.used', '--format=csv,nounits,noheader'],
-            encoding='utf-8'
-        )
-        return int(result.strip())
-
-    try:
-        # Antes de chamar empty_cache
-        mem_before = get_gpu_memory()
-        print(f"Memória da GPU antes de empty_cache: {mem_before} MB")
-
-        torch.cuda.empty_cache()
-
-        # Depois de chamar empty_cache
-        mem_after = get_gpu_memory()
-        print(f"Memória da GPU depois de empty_cache: {mem_after} MB")
-        
     except:
         None
 
