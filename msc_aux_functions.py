@@ -676,15 +676,8 @@ def train_one(full_train_dataset, initial_train_indices, test_dataset, net, n_ro
             return int(result.strip())
 
         try:
-            # Antes de chamar empty_cache
-            mem_before = get_gpu_memory()
-            print(f"Memória da GPU antes de empty_cache: {mem_before} MB")
-
             torch.cuda.empty_cache()
-
-            # Depois de chamar empty_cache
-            mem_after = get_gpu_memory()
-            print(f"Memória da GPU depois de empty_cache: {mem_after} MB")
+            print("Running.. Memory Empty Cache!")
         except:
             print(f"Coudn't run the GPU unfreezing")
 
