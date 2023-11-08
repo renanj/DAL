@@ -254,7 +254,7 @@ class ConfigExperiments:
 
 
             self.initial_seed_size = 2000
-            self.budget_list = [1000]
+            self.budget_list = [2000]
             self.training_size_cap = 20000
             self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_partial_last_layers'
@@ -292,7 +292,7 @@ class ConfigExperiments:
 
 
             self.initial_seed_size = 2000
-            self.budget_list = [1000]
+            self.budget_list = [2000]
             self.training_size_cap = 20000
             self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_partial_last_layers'
@@ -330,7 +330,7 @@ class ConfigExperiments:
 
 
             self.initial_seed_size = 2000
-            self.budget_list = [1000]
+            self.budget_list = [2000]
             self.training_size_cap = 20000
             self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_partial_last_layers'
