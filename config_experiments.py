@@ -55,7 +55,7 @@ class ConfigExperiments:
 
         # LROOT_V4
 
-        if self.experiment_name == 'LRootV4_BatchSize1000_v2':
+        if self.experiment_name == 'LRootV4_BatchSize1000_v2' or self.experiment_name == 'LRootV4_BatchSize1000_v2_round_2' or self.experiment_name == 'LRootV4_BatchSize1000_v3':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_BatchSize1000_v2'
             self.nclasses = 30
@@ -93,7 +93,7 @@ class ConfigExperiments:
             ]
                 
      
-        if self.experiment_name == 'LRootV4_BatchSize2000_v2':
+        if self.experiment_name == 'LRootV4_BatchSize2000_v2' or self.experiment_name == 'LRootV4_BatchSize2000_v2_round_2' or self.experiment_name == 'LRootV4_BatchSize2000_v3':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_BatchSize2000_v2'
             self.nclasses = 30
@@ -131,7 +131,7 @@ class ConfigExperiments:
             ]
                 
 
-        if self.experiment_name == 'LRootV4_BatchSize3000_v2':
+        if self.experiment_name == 'LRootV4_BatchSize3000_v2' or self.experiment_name == 'LRootV4_BatchSize3000_v2_round_2' or self.experiment_name == 'LRootV4_BatchSize3000_v3':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_BatchSize3000_v2'
             self.nclasses = 30
@@ -169,7 +169,7 @@ class ConfigExperiments:
             ]
                 
 
-        if self.experiment_name == 'LRootV4_BatchSize6000_v2':
+        if self.experiment_name == 'LRootV4_BatchSize6000_v2' or self.experiment_name == 'LRootV4_BatchSize6000_v2_round_2' or self.experiment_name == 'LRootV4_BatchSize6000_v3':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_BatchSize6000_v2'
             self.nclasses = 30
@@ -207,7 +207,7 @@ class ConfigExperiments:
             ]
                 
 
-        if self.experiment_name == 'LRootV4_BatchSize2000_DataAugumentation_v2':
+        if self.experiment_name == 'LRootV4_BatchSize2000_DataAugumentation_v2' or self.experiment_name == 'LRootV4_BatchSize2000_DataAugumentation_v2_round_2' or self.experiment_name == 'LRootV4_BatchSize2000_DataAugumentation_v3':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_BatchSize2000_DataAugumentation_v2'
             self.nclasses = 30
@@ -245,7 +245,7 @@ class ConfigExperiments:
             ]
                 
 
-        if self.experiment_name == 'LRootV4_BatchSize2000_Epochs25_v2':
+        if self.experiment_name == 'LRootV4_BatchSize2000_Epochs25_v2' or self.experiment_name == 'LRootV4_BatchSize2000_Epochs25_v2_round_2' or self.experiment_name == 'LRootV4_BatchSize2000_Epochs25_v3':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_BatchSize2000_Epochs25_v2'
             self.nclasses = 30
@@ -283,7 +283,7 @@ class ConfigExperiments:
             ]
 
 
-        if self.experiment_name == 'LRootV4_BatchSize2000_Epochs50_v2':
+        if self.experiment_name == 'LRootV4_BatchSize2000_Epochs50_v2' or self.experiment_name == 'LRootV4_BatchSize2000_Epochs50_v2_round_2' or self.experiment_name == 'LRootV4_BatchSize2000_Epochs50_v3':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_BatchSize2000_Epochs50_v2'
             self.nclasses = 30
@@ -292,7 +292,7 @@ class ConfigExperiments:
 
 
             self.initial_seed_size = 2000
-            self.budget_list = [2000]
+            self.budget_list = [1000]
             self.training_size_cap = 20000
             self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_partial_last_layers'
@@ -321,7 +321,7 @@ class ConfigExperiments:
             ]
 
 
-        if self.experiment_name == 'LRootV4_BatchSize2000_Epochs100_v2':
+        if self.experiment_name == 'LRootV4_BatchSize2000_Epochs100_v2' or self.experiment_name == 'LRootV4_BatchSize2000_Epochs100_v2_round_2' or self.experiment_name == 'LRootV4_BatchSize2000_Epochs100_v3':
             self.data_set_name = 'LRootV4'
             self.experiment_name = 'LRootV4_BatchSize2000_Epochs100_v2'
             self.nclasses = 30
@@ -330,7 +330,7 @@ class ConfigExperiments:
 
 
             self.initial_seed_size = 2000
-            self.budget_list = [2000]
+            self.budget_list = [1000]
             self.training_size_cap = 20000
             self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_partial_last_layers'
