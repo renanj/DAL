@@ -52,12 +52,26 @@ class ConfigExperiments:
             ]
 
 
-
         # LROOT_V4
 
         if self.experiment_name == 'LRootV4_BatchSize1000_v2' or self.experiment_name == 'LRootV4_BatchSize1000_v2_run_2' or self.experiment_name == 'LRootV4_BatchSize1000_v2_run_3':
+
             self.data_set_name = 'LRootV4'
-            self.experiment_name = 'LRootV4_BatchSize1000_v2'
+
+            if self.experiment_name == 'LRootV4_BatchSize1000_v2':
+                self.experiment_name = 'LRootV4_BatchSize1000_v2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize1000_v2_run_2':
+                self.experiment_name = 'LRootV4_BatchSize1000_v2_run_2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize1000_v2_run_3':
+                self.experiment_name = 'LRootV4_BatchSize1000_v2_run_3'
+
+            else:
+                None
+
+
+
             self.nclasses = 30
             self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
             self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
@@ -94,8 +108,23 @@ class ConfigExperiments:
                 
      
         if self.experiment_name == 'LRootV4_BatchSize2000_v2' or self.experiment_name == 'LRootV4_BatchSize2000_v2_run_2' or self.experiment_name == 'LRootV4_BatchSize2000_v2_run_3':
+
             self.data_set_name = 'LRootV4'
-            self.experiment_name = 'LRootV4_BatchSize2000_v2'
+
+            if self.experiment_name == 'LRootV4_BatchSize2000_v2':
+                self.experiment_name = 'LRootV4_BatchSize2000_v2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize2000_v2_run_2':
+                self.experiment_name = 'LRootV4_BatchSize2000_v2_run_2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize2000_v2_run_3':
+                self.experiment_name = 'LRootV4_BatchSize2000_v2_run_3'
+
+            else:
+                None
+
+
+
             self.nclasses = 30
             self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
             self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
@@ -132,8 +161,23 @@ class ConfigExperiments:
                 
 
         if self.experiment_name == 'LRootV4_BatchSize3000_v2' or self.experiment_name == 'LRootV4_BatchSize3000_v2_run_2' or self.experiment_name == 'LRootV4_BatchSize3000_v2_run_3':
+
             self.data_set_name = 'LRootV4'
-            self.experiment_name = 'LRootV4_BatchSize3000_v2'
+
+            if self.experiment_name == 'LRootV4_BatchSize3000_v2':
+                self.experiment_name = 'LRootV4_BatchSize3000_v2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize3000_v2_run_2':
+                self.experiment_name = 'LRootV4_BatchSize3000_v2_run_2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize3000_v2_run_3':
+                self.experiment_name = 'LRootV4_BatchSize3000_v2_run_3'
+
+            else:
+                None
+
+
+
             self.nclasses = 30
             self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
             self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
@@ -170,8 +214,23 @@ class ConfigExperiments:
                 
 
         if self.experiment_name == 'LRootV4_BatchSize6000_v2' or self.experiment_name == 'LRootV4_BatchSize6000_v2_run_2' or self.experiment_name == 'LRootV4_BatchSize6000_v2_run_3':
+
             self.data_set_name = 'LRootV4'
-            self.experiment_name = 'LRootV4_BatchSize6000_v2'
+
+            if self.experiment_name == 'LRootV4_BatchSize6000_v2':
+                self.experiment_name = 'LRootV4_BatchSize6000_v2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize6000_v2_run_2':
+                self.experiment_name = 'LRootV4_BatchSize6000_v2_run_2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize6000_v2_run_3':
+                self.experiment_name = 'LRootV4_BatchSize6000_v2_run_3'
+
+            else:
+                None
+
+
+
             self.nclasses = 30
             self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
             self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
@@ -208,8 +267,23 @@ class ConfigExperiments:
                 
 
         if self.experiment_name == 'LRootV4_BatchSize2000_DataAugumentation_v2' or self.experiment_name == 'LRootV4_BatchSize2000_DataAugumentation_v2_run_2' or self.experiment_name == 'LRootV4_BatchSize2000_DataAugumentation_v2_run_3':
+
             self.data_set_name = 'LRootV4'
-            self.experiment_name = 'LRootV4_BatchSize2000_DataAugumentation_v2'
+
+            if self.experiment_name == 'LRootV4_BatchSize2000_DataAugumentation_v2':
+                self.experiment_name = 'LRootV4_BatchSize2000_DataAugumentation_v2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize2000_DataAugumentation_v2_run_2':
+                self.experiment_name = 'LRootV4_BatchSize2000_DataAugumentation_v2_run_2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize2000_DataAugumentation_v2_run_3':
+                self.experiment_name = 'LRootV4_BatchSize2000_DataAugumentation_v2_run_3'
+
+            else:
+                None
+
+
+
             self.nclasses = 30
             self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
             self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
@@ -246,8 +320,23 @@ class ConfigExperiments:
                 
 
         if self.experiment_name == 'LRootV4_BatchSize2000_Epochs25_v2' or self.experiment_name == 'LRootV4_BatchSize2000_Epochs25_v2_run_2' or self.experiment_name == 'LRootV4_BatchSize2000_Epochs25_v2_run_3':
+
             self.data_set_name = 'LRootV4'
-            self.experiment_name = 'LRootV4_BatchSize2000_Epochs25_v2'
+
+            if self.experiment_name == 'LRootV4_BatchSize2000_Epochs25_v2':
+                self.experiment_name = 'LRootV4_BatchSize2000_Epochs25_v2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize2000_Epochs25_v2_run_2':
+                self.experiment_name = 'LRootV4_BatchSize2000_Epochs25_v2_run_2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize2000_Epochs25_v2_run_3':
+                self.experiment_name = 'LRootV4_BatchSize2000_Epochs25_v2_run_3'
+
+            else:
+                None
+
+
+
             self.nclasses = 30
             self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
             self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
@@ -284,8 +373,23 @@ class ConfigExperiments:
 
 
         if self.experiment_name == 'LRootV4_BatchSize2000_Epochs50_v2' or self.experiment_name == 'LRootV4_BatchSize2000_Epochs50_v2_run_2' or self.experiment_name == 'LRootV4_BatchSize2000_Epochs50_v2_run_3':
+
             self.data_set_name = 'LRootV4'
-            self.experiment_name = 'LRootV4_BatchSize2000_Epochs50_v2'
+
+            if self.experiment_name == 'LRootV4_BatchSize2000_Epochs50_v2':
+                self.experiment_name = 'LRootV4_BatchSize2000_Epochs50_v2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize2000_Epochs50_v2_run_2':
+                self.experiment_name = 'LRootV4_BatchSize2000_Epochs50_v2_run_2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize2000_Epochs50_v2_run_3':
+                self.experiment_name = 'LRootV4_BatchSize2000_Epochs50_v2_run_3'
+
+            else:
+                None
+
+
+
             self.nclasses = 30
             self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
             self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
@@ -322,8 +426,23 @@ class ConfigExperiments:
 
 
         if self.experiment_name == 'LRootV4_BatchSize2000_Epochs100_v2' or self.experiment_name == 'LRootV4_BatchSize2000_Epochs100_v2_run_2' or self.experiment_name == 'LRootV4_BatchSize2000_Epochs100_v2_run_3':
+
             self.data_set_name = 'LRootV4'
-            self.experiment_name = 'LRootV4_BatchSize2000_Epochs100_v2'
+
+            if self.experiment_name == 'LRootV4_BatchSize2000_Epochs100_v2':
+                self.experiment_name = 'LRootV4_BatchSize2000_Epochs100_v2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize2000_Epochs100_v2_run_2':
+                self.experiment_name = 'LRootV4_BatchSize2000_Epochs100_v2_run_2'
+
+            elif self.experiment_name == 'LRootV4_BatchSize2000_Epochs100_v2_run_3':
+                self.experiment_name = 'LRootV4_BatchSize2000_Epochs100_v2_run_3'
+
+            else:
+                None
+
+
+
             self.nclasses = 30
             self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
             self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
