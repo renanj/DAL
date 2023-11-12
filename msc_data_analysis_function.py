@@ -11,7 +11,16 @@ def get_image_path_and_label(index, dataset):
     label = dataset.classes[label_index]
     return image_path, label
 
-def apply_get_image_path_and_label(row):
+# def apply_get_image_path_and_label(row):
+#     # Convert the index to integer if it's not already
+#     index = int(row['Selected Indice'])
+#     image_path, label = get_image_path_and_label(index, dataset)
+#     # Extract image name from the image path
+#     image_name = os.path.basename(image_path)
+#     return pd.Series([image_path, image_name, label], index=['image_path', 'image_name', 'label'])
+
+
+def apply_get_image_path_and_label(row, dataset):
     # Convert the index to integer if it's not already
     index = int(row['Selected Indice'])
     image_path, label = get_image_path_and_label(index, dataset)
@@ -208,6 +217,13 @@ def process_path(_path):
     # Additional processing for df_indices
     if not final_df_indices.empty:
         final_df_indices['Selected Indice'] = final_df_indices['Selected Indice'].astype(int)
-        final_df_indices[['image_path', 'image_name', 'label']] = final_df_indices.apply(apply_get_image_path_and_label, axis=1)
+        # final_df_indices[['image_path', 'image_name', 'label']] = final_df_indices.apply(apply_get_image_path_and_label, axis=1) 
+        final_df_indices[['image_path', 'image_name', 'label']] = final_df_indices.apply(lambda row: apply_get_image_path_and_label(row, dataset), axis=1)
+
 
     return final_df_logs, final_df_indices
+
+
+
+
+
