@@ -5,6 +5,22 @@ import pandas as pd
 
 
 
+def get_image_path_and_label(index, dataset):
+    # Retrieve the image path and label for the given index
+    image_path, label_index = dataset.imgs[index]
+    label = dataset.classes[label_index]
+    return image_path, label
+
+def apply_get_image_path_and_label(row):
+    # Convert the index to integer if it's not already
+    index = int(row['Selected Indice'])
+    image_path, label = get_image_path_and_label(index, dataset)
+    # Extract image name from the image path
+    image_name = os.path.basename(image_path)
+    return pd.Series([image_path, image_name, label], index=['image_path', 'image_name', 'label'])
+
+
+
 def find_paths(directory):
     return [os.path.join(directory, d) for d in os.listdir(directory) if os.path.isdir(os.path.join(directory, d))]
 
@@ -181,7 +197,17 @@ def process_path(_path):
         print("Path pattern is not recognized.")
         return None, None
 
+    # Concatenate all DataFrames in each list if they are not empty
     final_df_logs = pd.concat(dfs_logs, ignore_index=True) if dfs_logs else pd.DataFrame()
     final_df_indices = pd.concat(dfs_indices, ignore_index=True) if dfs_indices else pd.DataFrame()
+
+    # Additional processing for df_logs
+    if not final_df_logs.empty:
+        final_df_logs['labeled_data_added'] = final_df_logs.groupby(['database', 'experiment', 'strategy'])['len_training_points'].diff().fillna(final_df_logs['len_training_points'])
+
+    # Additional processing for df_indices
+    if not final_df_indices.empty:
+        final_df_indices['Selected Indice'] = final_df_indices['Selected Indice'].astype(int)
+        final_df_indices[['image_path', 'image_name', 'label']] = final_df_indices.apply(apply_get_image_path_and_label, axis=1)
 
     return final_df_logs, final_df_indices
