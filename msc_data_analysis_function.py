@@ -4,6 +4,14 @@ import pickle
 import pandas as pd
 
 
+import torch
+from torchvision.models import resnet50
+from torch.utils.data import DataLoader
+from torchvision import datasets
+from torchvision import transforms
+
+
+
 
 def get_image_path_and_label(index, dataset):
     # Retrieve the image path and label for the given index
@@ -11,23 +19,17 @@ def get_image_path_and_label(index, dataset):
     label = dataset.classes[label_index]
     return image_path, label
 
-# def apply_get_image_path_and_label(row):
-#     # Convert the index to integer if it's not already
-#     index = int(row['Selected Indice'])
-#     image_path, label = get_image_path_and_label(index, dataset)
-#     # Extract image name from the image path
-#     image_name = os.path.basename(image_path)
-#     return pd.Series([image_path, image_name, label], index=['image_path', 'image_name', 'label'])
 
-
-def apply_get_image_path_and_label(row, dataset):
-    # Convert the index to integer if it's not already
+def apply_get_image_path_and_label(row, datasets_dict):
+    dataset_name = row['database']
+    if dataset_name not in datasets_dict:
+        return pd.Series([None, None, None], index=['image_path', 'image_name', 'label'])
+    
+    dataset = datasets_dict[dataset_name]
     index = int(row['Selected Indice'])
     image_path, label = get_image_path_and_label(index, dataset)
-    # Extract image name from the image path
     image_name = os.path.basename(image_path)
     return pd.Series([image_path, image_name, label], index=['image_path', 'image_name', 'label'])
-
 
 
 def find_paths(directory):
@@ -143,7 +145,8 @@ def process_experiment_path(path):
             print(f"Error in processing logs_dict: {e}")
             error_paths.append(strategy_path)
 
-        # Process used_indices_dict files
+        
+        # Process used_indices_dict files        
         try:
             pkl_indices_file = os.path.join(strategy_path, 'used_indices_dict.pkl')
             json_indices_file = os.path.join(strategy_path, 'used_indices_dict.json')
@@ -169,7 +172,9 @@ def process_experiment_path(path):
 
     return _list_dfs_logs, _list_dfs_indices
 
-def process_path(_path):
+
+
+def process_path(_path, datasets_dict=None):
     dfs_logs = []
     dfs_indices = []
 
@@ -214,16 +219,12 @@ def process_path(_path):
     if not final_df_logs.empty:
         final_df_logs['labeled_data_added'] = final_df_logs.groupby(['database', 'experiment', 'strategy'])['len_training_points'].diff().fillna(final_df_logs['len_training_points'])
 
-    # Additional processing for df_indices
+    
     if not final_df_indices.empty:
+      if datasets_dict != None:        
         final_df_indices['Selected Indice'] = final_df_indices['Selected Indice'].astype(int)
         # final_df_indices[['image_path', 'image_name', 'label']] = final_df_indices.apply(apply_get_image_path_and_label, axis=1) 
-        final_df_indices[['image_path', 'image_name', 'label']] = final_df_indices.apply(lambda row: apply_get_image_path_and_label(row, dataset), axis=1)
+        final_df_indices[['image_path', 'image_name', 'label']] = final_df_indices.apply(lambda row: apply_get_image_path_and_label(row, datasets_dict), axis=1)
 
 
     return final_df_logs, final_df_indices
-
-
-
-
-
