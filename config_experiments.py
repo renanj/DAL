@@ -479,171 +479,13 @@ class ConfigExperiments:
 
 
         #ASLO
-        if self.experiment_name == 'ASLO_Baseline':
+
+
+
+        if self.experiment_name == 'ASLO_BatchSize150_v2_run_1' or self.experiment_name == 'ASLO_BatchSize150_v2_run_2' or self.experiment_name == 'ASLO_BatchSize150_v2_run_3':
+
             self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_Baseline'
-            self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/training'
-            self.custom_test_root = '/content/ASLO/testing'
-
-
-            self.initial_seed_size = 300
-            self.budget_list = [300]
-            self.training_size_cap = 3300
-            self.model = 'Custom_ResNet18'
-            self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
-
-
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
-
-
-            self.data_augumentation = False
-            self.train_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.test_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.strategy_list = [
-                'random', 'margin', 'least_confidence','entropy', 'bald', 'batch_bald', 'badge'                        
-            ]
-                
-        if self.experiment_name == 'ASLO_Baseline_DataAugumentation':
-            self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_Baseline_DataAugumentation'
-            self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/training'
-            self.custom_test_root = '/content/ASLO/testing'
-
-
-            self.initial_seed_size = 300
-            self.budget_list = [300]
-            self.training_size_cap = 3300
-            self.model = 'Custom_ResNet18'
-            self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
-
-
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
-
-
-            self.data_augumentation = True
-            self.train_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.RandomHorizontalFlip(p=1),
-                transforms.RandomRotation(degrees=30),
-                transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.test_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.strategy_list = [
-                'random', 'margin', 'least_confidence','entropy', 'bald', 'batch_bald', 'badge'                        
-            ]
-                
-        if self.experiment_name == 'ASLO_Baseline_LowData':
-            self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_Baseline_LowData'
-            self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/training'
-            self.custom_test_root = '/content/ASLO/testing'
-
-
-            self.initial_seed_size = 50
-            self.budget_list = [50]
-            self.training_size_cap = 400
-            self.model = 'Custom_ResNet18'
-            self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
-
-
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
-
-
-            self.data_augumentation = False
-            self.train_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.test_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.strategy_list = [
-                'random', 'margin', 'bald', 'batch_bald',        
-                'badge',                 
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
-            ]
-                
-        if self.experiment_name == 'ASLO_Baseline_LowData_DataAugumentation':
-            self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_Baseline_LowData_DataAugumentation'
-            self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/training'
-            self.custom_test_root = '/content/ASLO/testing'
-
-
-            self.initial_seed_size = 50
-            self.budget_list = [50]
-            self.training_size_cap = 400
-            self.model = 'Custom_ResNet18'
-            self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
-
-
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
-
-
-            self.data_augumentation = True
-            self.train_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.RandomHorizontalFlip(p=1),
-                transforms.RandomRotation(degrees=30),
-                transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.test_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.strategy_list = [
-                'random', 'margin', 'bald', 'batch_bald',        
-                'badge',                 
-                'glister', 'fass',
-                'entropy', 'least_confidence', 'coreset', 
-                'adversarial_bim', 'adversarial_deepfool'
-            ]
-                
-        if self.experiment_name == 'ASLO_BatchSize150':
-            self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_BatchSize150'
+            
             self.nclasses = 22
             self.custom_train_root = '/content/ASLO/training'
             self.custom_test_root = '/content/ASLO/testing'
@@ -675,12 +517,51 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'bald', 'batch_bald', 'badge'
+                'random', 'margin', 'least_confidence','entropy','bald','batch_bald'                
             ]
                 
-        if self.experiment_name == 'ASLO_BatchSize300':
+        if self.experiment_name == 'ASLO_BatchSize200_v2_run_1' or self.experiment_name == 'ASLO_BatchSize200_v2_run_2' or self.experiment_name == 'ASLO_BatchSize200_v2_run_3':
+
             self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_BatchSize300'
+            
+            self.nclasses = 22
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
+
+
+            self.initial_seed_size = 300
+            self.budget_list = [200]
+            self.training_size_cap = 3300
+            self.model = 'Custom_ResNet18'
+            self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
+
+
+            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
+
+
+            self.data_augumentation = False
+            self.train_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+            self.test_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+            self.strategy_list = [
+                'random', 'margin', 'least_confidence','entropy','bald','batch_bald'                
+            ]
+                
+        if self.experiment_name == 'ASLO_BatchSize300_v2_run_1' or self.experiment_name == 'ASLO_BatchSize300_v2_run_2' or self.experiment_name == 'ASLO_BatchSize300_v2_run_3':
+
+            self.data_set_name = 'ASLO'
+            
             self.nclasses = 22
             self.custom_train_root = '/content/ASLO/training'
             self.custom_test_root = '/content/ASLO/testing'
@@ -712,19 +593,20 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'bald', 'batch_bald', 'badge'
+                'random', 'margin', 'least_confidence','entropy','bald','batch_bald'                
             ]
                 
-        if self.experiment_name == 'ASLO_BatchSize500':
+        if self.experiment_name == 'ASLO_BatchSize600_v2_run_1' or self.experiment_name == 'ASLO_BatchSize600_v2_run_2' or self.experiment_name == 'ASLO_BatchSize600_v2_run_3':
+
             self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_BatchSize500'
+            
             self.nclasses = 22
             self.custom_train_root = '/content/ASLO/training'
             self.custom_test_root = '/content/ASLO/testing'
 
 
             self.initial_seed_size = 300
-            self.budget_list = [500]
+            self.budget_list = [600]
             self.training_size_cap = 3300
             self.model = 'Custom_ResNet18'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
@@ -749,123 +631,13 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'bald', 'batch_bald', 'badge'
+                'random', 'margin', 'least_confidence','entropy','bald','batch_bald'                
             ]
                 
-        if self.experiment_name == 'ASLO_LowData_BatchSize10':
+        if self.experiment_name == 'ASLO_BatchSize300_DataAugumentation_v2_run_1' or self.experiment_name == 'ASLO_BatchSize300_DataAugumentation_v2_run_2' or self.experiment_name == 'ASLO_BatchSize300_DataAugumentation_v2_run_3':
+
             self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_LowData_BatchSize10'
-            self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/training'
-            self.custom_test_root = '/content/ASLO/testing'
-
-
-            self.initial_seed_size = 100
-            self.budget_list = [10]
-            self.training_size_cap = 400
-            self.model = 'Custom_ResNet18'
-            self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
-
-
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
-
-
-            self.data_augumentation = False
-            self.train_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.test_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.strategy_list = [
-                'random', 'margin', 'bald', 'batch_bald', 'badge'
-            ]
-                
-        if self.experiment_name == 'ASLO_LowData_BatchSize25':
-            self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_LowData_BatchSize25'
-            self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/training'
-            self.custom_test_root = '/content/ASLO/testing'
-
-
-            self.initial_seed_size = 100
-            self.budget_list = [25]
-            self.training_size_cap = 400
-            self.model = 'Custom_ResNet18'
-            self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
-
-
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
-
-
-            self.data_augumentation = False
-            self.train_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.test_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.strategy_list = [
-                'random', 'margin', 'bald', 'batch_bald', 'badge'
-            ]
-                
-        if self.experiment_name == 'ASLO_LowData_BatchSize50':
-            self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_LowData_BatchSize50'
-            self.nclasses = 22
-            self.custom_train_root = '/content/ASLO/training'
-            self.custom_test_root = '/content/ASLO/testing'
-
-
-            self.initial_seed_size = 100
-            self.budget_list = [50]
-            self.training_size_cap = 400
-            self.model = 'Custom_ResNet18'
-            self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
-
-
-            self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
-
-
-            self.data_augumentation = False
-            self.train_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.test_transform = transforms.Compose([
-                transforms.Grayscale(num_output_channels=1),
-                transforms.Lambda(lambda x: x.convert("RGB")),
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
-            self.strategy_list = [
-               'random', 'margin', 'bald', 'batch_bald', 'badge'
-            ]
-                
-        if self.experiment_name == 'ASLO_Epochs10':
-            self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_Epochs10'
+            
             self.nclasses = 22
             self.custom_train_root = '/content/ASLO/training'
             self.custom_test_root = '/content/ASLO/testing'
@@ -881,6 +653,44 @@ class ConfigExperiments:
             self.args = [{'n_epoch': 10, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
 
 
+            self.data_augumentation = True
+            self.train_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+            self.test_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+            self.strategy_list = [
+                'random', 'margin', 'least_confidence','entropy','bald','batch_bald'                
+            ]
+                
+        if self.experiment_name == 'ASLO_BatchSize300_Epochs25_v2_run_1' or self.experiment_name == 'ASLO_BatchSize300_Epochs25_v2_run_2' or self.experiment_name == 'ASLO_BatchSize300_Epochs25_v2_run_3':
+
+            self.data_set_name = 'ASLO'
+            
+            self.nclasses = 22
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
+
+
+            self.initial_seed_size = 300
+            self.budget_list = [300]
+            self.training_size_cap = 3300
+            self.model = 'Custom_ResNet18'
+            self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
+
+
+            self.args = [{'n_epoch': 25, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
+
+
             self.data_augumentation = False
             self.train_transform = transforms.Compose([
                 transforms.Grayscale(num_output_channels=1),
@@ -897,12 +707,13 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-               'random', 'margin', 'bald', 'batch_bald', 'badge'
-            ]
-                
-        if self.experiment_name == 'ASLO_Epochs50':
+                'random', 'margin', 'least_confidence','entropy','bald','batch_bald'                
+            ]            
+
+        if self.experiment_name == 'ASLO_BatchSize300_Epochs50_v2_run_1' or self.experiment_name == 'ASLO_BatchSize300_Epochs50_v2_run_2' or self.experiment_name == 'ASLO_BatchSize300_Epochs50_v2_run_3':
+
             self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_Epochs50'
+            
             self.nclasses = 22
             self.custom_train_root = '/content/ASLO/training'
             self.custom_test_root = '/content/ASLO/testing'
@@ -934,12 +745,13 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'bald', 'batch_bald', 'badge'
-            ]
-                
-        if self.experiment_name == 'ASLO_Epochs100':
+                'random', 'margin', 'least_confidence','entropy','bald','batch_bald'                
+            ]                
+
+        if self.experiment_name == 'ASLO_BatchSize300_Epochs100_v2_run_1' or self.experiment_name == 'ASLO_BatchSize300_Epochs100_v2_run_2' or self.experiment_name == 'ASLO_BatchSize300_Epochs100_v2_run_3':
+
             self.data_set_name = 'ASLO'
-            self.experiment_name = 'ASLO_Epochs100'
+            
             self.nclasses = 22
             self.custom_train_root = '/content/ASLO/training'
             self.custom_test_root = '/content/ASLO/testing'
@@ -948,7 +760,7 @@ class ConfigExperiments:
             self.initial_seed_size = 300
             self.budget_list = [300]
             self.training_size_cap = 3300
-            self.model = 'CustomResNet18'
+            self.model = 'Custom_ResNet18'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
@@ -971,8 +783,10 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
             self.strategy_list = [
-                'random', 'margin', 'bald', 'batch_bald', 'badge'
+                'random', 'margin', 'least_confidence','entropy','bald','batch_bald'                
             ]
+                
+
 
                 
         #MNIST
