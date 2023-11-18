@@ -494,7 +494,7 @@ class ConfigExperiments:
             self.initial_seed_size = 300
             self.budget_list = [150]
             self.training_size_cap = 3300
-            self.model = 'Custom_ResNet18'
+            self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
@@ -532,7 +532,7 @@ class ConfigExperiments:
             self.initial_seed_size = 300
             self.budget_list = [200]
             self.training_size_cap = 3300
-            self.model = 'Custom_ResNet18'
+            self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
@@ -570,7 +570,7 @@ class ConfigExperiments:
             self.initial_seed_size = 300
             self.budget_list = [300]
             self.training_size_cap = 3300
-            self.model = 'Custom_ResNet18'
+            self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
@@ -608,7 +608,7 @@ class ConfigExperiments:
             self.initial_seed_size = 300
             self.budget_list = [600]
             self.training_size_cap = 3300
-            self.model = 'Custom_ResNet18'
+            self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
@@ -646,7 +646,7 @@ class ConfigExperiments:
             self.initial_seed_size = 300
             self.budget_list = [300]
             self.training_size_cap = 3300
-            self.model = 'Custom_ResNet18'
+            self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
@@ -684,7 +684,7 @@ class ConfigExperiments:
             self.initial_seed_size = 300
             self.budget_list = [300]
             self.training_size_cap = 3300
-            self.model = 'Custom_ResNet18'
+            self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
@@ -722,7 +722,7 @@ class ConfigExperiments:
             self.initial_seed_size = 300
             self.budget_list = [300]
             self.training_size_cap = 3300
-            self.model = 'Custom_ResNet18'
+            self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
@@ -760,7 +760,7 @@ class ConfigExperiments:
             self.initial_seed_size = 300
             self.budget_list = [300]
             self.training_size_cap = 3300
-            self.model = 'Custom_ResNet18'
+            self.model = 'Custom_VGG11'
             self.model_freeze_method = 'pre_trained_unfreeze_top_layer'
 
 
