@@ -55,7 +55,7 @@ class ConfigExperiments:
         #DATASETS:
 
         if self.experiment_name == 'dataset_load_LRootV4':
-            
+
             self.data_set_name = 'LRootV4'        
             self.nclasses = 30
             self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
@@ -542,7 +542,7 @@ class ConfigExperiments:
             ])
             self.strategy_list = [
                 'random', 'margin', 'least_confidence','entropy','bald','batch_bald'                        
-            ]ASLO
+            ]
 
 
         #ASLO
