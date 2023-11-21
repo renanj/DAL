@@ -52,6 +52,73 @@ class ConfigExperiments:
             ]
 
 
+        #DATASETS:
+
+        if self.experiment_name == 'dataset_load_LRootV4':
+            
+            self.data_set_name = 'LRootV4'        
+            self.nclasses = 30
+            self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
+            self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
+            self.train_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])                
+            ])
+            self.test_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+
+        if self.experiment_name == 'dataset_load_ASLO':        
+
+            self.data_set_name = 'ASLO'            
+            self.nclasses = 22
+            self.custom_train_root = '/content/ASLO/training'
+            self.custom_test_root = '/content/ASLO/testing'
+            self.train_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+            self.test_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])            
+
+        if self.experiment_name == 'dataset_load_MNIST':
+
+            self.data_set_name = 'MNIST'        
+            self.nclasses = 10
+            self.custom_train_root = '-'
+            self.custom_test_root = '-'    
+            self.train_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+            self.test_transform = transforms.Compose([
+                transforms.Grayscale(num_output_channels=1),
+                transforms.Lambda(lambda x: x.convert("RGB")),
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+
+        #############################################################################################################################################
+
         # LROOT_V4
 
         if self.experiment_name == 'LRootV4_BatchSize1000_v2' or self.experiment_name == 'LRootV4_BatchSize1000_v2_run_2' or self.experiment_name == 'LRootV4_BatchSize1000_v2_run_3':
@@ -475,7 +542,7 @@ class ConfigExperiments:
             ])
             self.strategy_list = [
                 'random', 'margin', 'least_confidence','entropy','bald','batch_bald'                        
-            ]
+            ]ASLO
 
 
         #ASLO
@@ -4421,4 +4488,5 @@ class ConfigExperiments:
         #         'random', 'margin', 'badge', 'batch_bald'
         #     ]
                     
+
 
