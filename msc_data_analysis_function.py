@@ -33,7 +33,7 @@ from importlib import reload
 # Process Files (Paths)
 #################################  #################################  #################################  #################################
 
-def (index, dataset):
+def get_image_path_and_label(index, dataset):
     # Retrieve the image path and label for the given index
     image_path, label_index = dataset.imgs[index]
     label = dataset.classes[label_index]
@@ -604,6 +604,3 @@ def timming_table_consolidation(df):
   pivot_table.reset_index(inplace=True)
 
   return pivot_table    
-
-
-
