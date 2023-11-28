@@ -3,6 +3,8 @@ import json
 import pickle
 import pandas as pd
 
+import re 
+
 import torch
 from torchvision.models import resnet50
 from torch.utils.data import DataLoader
@@ -31,10 +33,25 @@ from importlib import reload
 import matplotlib.ticker as ticker
 
 
+from itertools import product
+
+
+
 
 #################################  #################################  #################################  #################################
 # Process Files (Paths)
 #################################  #################################  #################################  #################################
+
+# Function to extract run number
+def extract_run_number(experiment_name):
+    match = re.search(r'run_(\d+)$', experiment_name)
+    return int(match.group(1)) if match else 1
+
+# Function to extract common experiment name
+def extract_experiment_name(experiment_name):
+    return re.sub(r'_run_\d+$', '', experiment_name)
+
+
 
 def get_image_path_and_label(index, dataset):
     # Retrieve the image path and label for the given index
@@ -351,7 +368,7 @@ def adjusted_plot_with_arrow_to_zoom(df, ax, zoom_regions=None, std_dev=None, co
 
     # Set custom ticks (e.g., starting from 2000 and incrementing appropriately)
     # Modify this part based on how you want to set your ticks
-    tick_interval = 2000  # Set this based on your data
+    tick_interval = min_len_training_points  # Set this based on your data
     ax.xaxis.set_major_locator(ticker.MultipleLocator(tick_interval))
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{int(x)}'))
 

@@ -58,6 +58,13 @@ class ConfigExperiments:
 
             self.data_set_name = 'LRootV4'        
             self.nclasses = 30
+            self.model = 'Custom_VGG11'
+
+            self.args = [{'n_epoch': 50, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
+            self.data_augumentation = False
+
+
+            self.model_freeze_method = 'pre_trained_unfreeze_partial_last_layers'            
             self.custom_train_root = '/content/LRoot_sipi_v4_adjusted/train'
             self.custom_test_root = '/content/LRoot_sipi_v4_adjusted/test'
             self.train_transform = transforms.Compose([
@@ -76,10 +83,17 @@ class ConfigExperiments:
             ])            
 
 
+
         if self.experiment_name == 'dataset_load_ASLO':        
 
             self.data_set_name = 'ASLO'            
             self.nclasses = 22
+            self.model = 'Custom_VGG11'
+
+            self.args = [{'n_epoch': 50, 'lr': 0.01, 'batch_size': 40, 'max_accuracy': 0.98, 'freeze_method': 'pre_trained_unfreeze_top_layer', 'islogs': True, 'isverbose': True, 'device': 'cuda',  'isreset': True}]
+            self.data_augumentation = False
+
+            self.model_freeze_method = 'pre_trained_unfreeze_partial_last_layers'            
             self.custom_train_root = '/content/ASLO/training'
             self.custom_test_root = '/content/ASLO/testing'
             self.train_transform = transforms.Compose([
@@ -97,10 +111,14 @@ class ConfigExperiments:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])                   
 
+
+
         if self.experiment_name == 'dataset_load_MNIST':
 
             self.data_set_name = 'MNIST'        
             self.nclasses = 10
+            self.model = 'Custom_VGG11'
+            self.model_freeze_method = 'pre_trained_unfreeze_partial_last_layers'
             self.custom_train_root = '-'
             self.custom_test_root = '-'    
             self.train_transform = transforms.Compose([
