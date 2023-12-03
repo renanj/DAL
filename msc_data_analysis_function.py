@@ -3,9 +3,7 @@ import json
 import pickle
 import pandas as pd
 
-import re 
-
-import torch
+import torch 
 from torchvision.models import resnet50
 from torch.utils.data import DataLoader
 from torchvision import datasets
@@ -16,24 +14,36 @@ import cuml
 import pandas as pd
 import numpy as np
 
-import matplotlib.pyplot as plt
-import seaborn as sns
+
 
 import pickle
 import os
 import time
 
-import matplotlib.pyplot as plt
-import seaborn as sns
-import matplotlib.pyplot as plt
-import seaborn as sns
+
 from matplotlib.patches import Rectangle, ConnectionPatch
 from importlib import reload
 
 import matplotlib.ticker as ticker
 
 
-from itertools import product
+import seaborn as sns
+import matplotlib.ticker as ticker
+from matplotlib.patches import Rectangle, ConnectionPatch
+import matplotlib.colors as mcolors
+
+
+
+
+import seaborn as sns
+import matplotlib.ticker as ticker
+from matplotlib.patches import Rectangle, ConnectionPatch
+import matplotlib.colors as mcolors
+
+import matplotlib.ticker as ticker
+import matplotlib.colors as mcolors
+
+from sklearn.metrics import silhouette_score
 
 
 
@@ -265,51 +275,78 @@ def process_path(_path, datasets_dict=None):
 
 
 
-
 #################################  #################################  #################################  #################################
 # Create Pandas DataFrame
 #################################  #################################  #################################  #################################
 
-def generate_tsne_embeddings_for_datasets(dict_datasets, train_transform=None, test_transform=None, model=None, use_cuml=False):
-    if model is None:
-        model = resnet50(pretrained=True).eval().cuda()
-        # if torch.cuda.is_available():
-        #     model = model.cuda()
 
-    # Assuming the model is a feature extractor
-    feature_extractor = torch.nn.Sequential(*list(model.children())[:-1])
+# Function to evaluate t-SNE embeddings using scikit-learn's silhouette_score
+def evaluate_tsne_embedding(embedding, labels):
+    # Calculate the silhouette score (note: expects NumPy arrays)
+    return -silhouette_score(embedding, labels)  # Negative because Optuna minimizes the objective
 
+# Function to optimize t-SNE parameters
+def optimize_tsne_params(features_np, labels, trial):
+    try:
+        n_components = trial.suggest_int("n_components", 2, 2)
+        perplexity = trial.suggest_float("perplexity", 5, 50)
+        learning_rate = trial.suggest_float("learning_rate", 10, 1000)
 
+        tsne = cuml.TSNE(n_components=n_components, perplexity=perplexity, learning_rate=learning_rate)
+        embedding = tsne.fit_transform(features_np)
 
-    features = []
+        # Evaluate the embedding quality
+        return evaluate_tsne_embedding(embedding, labels)
+    except Exception as e:
+        print(f"An error occurred in trial {trial.number}: {e}")
+        return float('inf')  # Return a large value to indicate failure
 
+# Function to generate t-SNE embeddings for datasets
+def generate_tsne_embeddings_for_datasets(dict_datasets, dict_models, n_trials=10):
+    default_model = resnet50(pretrained=True).eval().cuda()
     all_tsne_embeddings = pd.DataFrame()
 
     for dataset_name, dataset in dict_datasets.items():
-        # Data loader for the dataset
+        model = dict_models.get(dataset_name, default_model)
         dataloader = DataLoader(dataset, batch_size=32, shuffle=False)
 
-        # Extract features
+        # Extract features and labels
         features = []
+        labels = []
         with torch.no_grad():
             for data in dataloader:
-                inputs = data[0].cuda()
-                # if torch.cuda.is_available():
-                #     inputs = inputs.cuda()
-                outputs = feature_extractor(inputs)
+                inputs, batch_labels = data[0].cuda(), data[1]
+                outputs = model(inputs)
                 features.append(outputs.squeeze(-1).squeeze(-1))
+                labels.append(batch_labels)
 
         features = torch.cat(features, dim=0)
         features_np = features.cpu().numpy()
+        labels = torch.cat(labels, dim=0).numpy()
+
+        # Optimize t-SNE parameters
+        study = optuna.create_study(direction='minimize')
+        study.optimize(lambda trial: optimize_tsne_params(features_np, labels, trial), n_trials=n_trials)
+
+        if len(study.trials) == 0 or study.best_trial is None:
+            print(f"No successful trials for dataset {dataset_name}. Using default t-SNE parameters.")
+            best_params = {'n_components': 2, 'perplexity': 30, 'learning_rate': 200}
+        else:
+            best_params = study.best_params
 
 
-        tsne = cuml.TSNE(n_components=2, perplexity=30, learning_rate=200)
+        # best_params =  {'n_components': 2, 'perplexity': 49.25938220738151, 'learning_rate': 642.3745696585185} #345
+        # print("best_params = ", best_params)
+
+
+
+        tsne = cuml.TSNE(**best_params)
         embedding = tsne.fit_transform(features_np)
 
         # Create a DataFrame for embeddings
         tsne_df = pd.DataFrame(embedding, columns=['X1', 'X2'])
         tsne_df['Indices'] = range(len(tsne_df))
-        tsne_df['database'] = dataset_name  # Add the dataset name
+        tsne_df['database'] = dataset_name
 
         all_tsne_embeddings = pd.concat([all_tsne_embeddings, tsne_df], ignore_index=True)
 
@@ -317,111 +354,477 @@ def generate_tsne_embeddings_for_datasets(dict_datasets, train_transform=None, t
 
 
 
+
 #################################  #################################  #################################  #################################
 # Data Analysis
 #################################  #################################  #################################  #################################
 
-# Accuracy Chart
-def adjusted_plot_with_arrow_to_zoom(df, ax, zoom_regions=None, std_dev=None, colors_dict=None):
+def extract_number(label):
+    match = re.search(r'\d+', label)
+    return int(match.group()) if match else 0
+
+def extract_run_number(experiment_name):
+    match = re.search(r'run_(\d+)$', experiment_name)
+    return int(match.group(1)) if match else 1
+
+def extract_experiment_name(experiment_name):
+    return re.sub(r'_run_\d+$', '', experiment_name)
+
+def rename_dataframe_elements(df, dict_renames):
+    """
+    Rename elements in the DataFrame according to the provided rules.
+
+    :param df: The pandas DataFrame to be renamed.
+    :param rename_rules: A dictionary containing renaming rules for strategies, KPIs, and columns.
+    :return: A new DataFrame with renamed elements.
+    """
+    # Create a copy of the DataFrame to avoid modifying the original one
+    renamed_df = df.copy()
+
+    if dict_renames:
+        # Replace values in the 'strategy' column
+        if 'rename_dict_strategies' in dict_renames and 'strategy' in renamed_df.columns:
+            try:
+                renamed_df['strategy'] = renamed_df['strategy'].replace(dict_renames['rename_dict_strategies'])
+            except Exception as e:
+                print(f'Error when trying to rename rename_dict_strategies: {e}')
+
+        # Replace values in the 'kpi' column
+        if 'rename_dict_kpis' in dict_renames and 'kpi' in renamed_df.columns:
+            try:
+                renamed_df['kpi'] = renamed_df['kpi'].replace(dict_renames['rename_dict_kpis'])
+            except Exception as e:
+                print(f'Error when trying to rename rename_dict_kpis: {e}')
+
+        # Rename DataFrame columns
+        if 'rename_dict_columns' in dict_renames:
+            try:
+                renamed_df = renamed_df.rename(columns=dict_renames['rename_dict_columns'])
+            except Exception as e:
+                print(f'Error when trying to rename rename_dict_columns: {e}')
+
+    return renamed_df
+
+def create_df_metrics(df, cumulative_time=True, dict_renames=None, _additional_dimension_column_name=None):
+
+    if _additional_dimension_column_name is not None:
+        _additional_dimension = 'Yes'
+    else:
+        _additional_dimension = None
+
+    ##################################################################################################################################################################
+    # Generate Basic Metrics    
+    ##################################################################################################################################################################    
     
-    # sns.set_style("whitegrid", {'axes.grid': True, 'grid.color': '.2'})
-    #  ax.grid(True, color='lightgray')
+    results = []
+
+    # Group by experiment_group, strategy, and rounds
+    if _additional_dimension:
+        grouped_df = df.groupby(['experiment_group', 'strategy', 'len_training_points',_additional_dimension_column_name])   
+
+        # Loop over each group
+        for (experiment_group, strategy, rounds_num, _additional_dimension), group in grouped_df:
 
 
-    ax.grid(True, color='gray', alpha=0.5)      
+            # Calculate individual time metrics
+            selection_time = group['test_selection_time'].sum()
+            training_time = group['test_training_time'].sum()
+            total_time = selection_time + training_time
 
-    if colors_dict is None:
-        colors_dict = dict(zip(df['strategy'].unique(), sns.color_palette(n_colors=len(df['strategy'].unique()))))
+            total_runs = group['test_selection_time'].shape[0]
 
-    colors_dict['random'] = 'black'
-
-    # random_data = df[df['strategy'] == 'random']
-    # ax.plot(random_data['len_training_points'], random_data['test_accuracy'], color='black', lw=3, marker='o', label='random')
-    sns.lineplot(data=df, x="len_training_points", y="test_accuracy", hue="strategy", palette=colors_dict, lw=1, marker="o", ax=ax)
-
-    # ax.legend(title='Strategy')
-
-    # if args is None:
-    #   args = args['nothing'] = None
-
-    # if args['chart_title']:
-    #   ax.set_title(args['chart_title'])
-
-    # if args['set_x_label']:
-    #   ax.set_xlabel(args['set_x_label'])
-
-    # if args['set_ylabel']:
-    #   ax.set_xlabel(args['set_ylabel'])
-
-    # if args['legend']:
-    #   ax.legend(args['legend'])
-
-    # # ax.tick_params(labelsize=13)
-    # ax.grid(True)
+            # Calculate cumulative time metrics if required
+            
+             
 
 
-
-    # Adjust x-axis to start from the first data point and set custom ticks
-    min_len_training_points = df['len_training_points'].min()
-    max_len_training_points = df['len_training_points'].max()
-    ax.set_xlim(left=0, right=max_len_training_points)
-
-    # Set custom ticks (e.g., starting from 2000 and incrementing appropriately)
-    # Modify this part based on how you want to set your ticks
-    tick_interval = min_len_training_points  # Set this based on your data
-    ax.xaxis.set_major_locator(ticker.MultipleLocator(tick_interval))
-    ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{int(x)}'))
-
-
-    ax.set_xlabel('Labeled Set Size')
-    ax.set_ylabel('Test Accuracy')
-    ax.set_title('AL Strategies Comparison')
-    ax.legend()
-    ax.grid(True)
-
-    if std_dev and std_dev in df.columns:
-        for strategy, color in colors_dict.items():
-            subset = df[df['strategy'] == strategy]
-            ax.fill_between(subset['len_training_points'], subset['test_accuracy'] - subset[std_dev], subset['test_accuracy'] + subset[std_dev], color=color, alpha=0.2)
+            if cumulative_time:
+                cumulative_selection_time = df[(df['experiment_group'] == experiment_group) &
+                                                (df['strategy'] == strategy) &
+                                                (df['len_training_points'] <= rounds_num) & 
+                                               (df[_additional_dimension_column_name] == _additional_dimension)
+                                              ]['test_selection_time'].sum()
+                                              
+                cumulative_training_time = df[(df['experiment_group'] == experiment_group) &
+                                              (df['strategy'] == strategy) &
+                                              (df['len_training_points'] <= rounds_num) & 
+                                              (df[_additional_dimension_column_name] == _additional_dimension)
+                                              ]['test_training_time'].sum()
+                cumulative_total_time = cumulative_selection_time + cumulative_training_time
+            else:
+                cumulative_selection_time = selection_time
+                cumulative_training_time = training_time
+                cumulative_total_time = total_time
 
 
-    if zoom_regions:
-        for region in zoom_regions:
-            x1, x2, y1, y2 = region['x1'], region['x2'], region['y1'], region['y2']
-            pos = region['pos']
 
-            ax_zoom = ax.inset_axes(pos)
+            # Calculate mean and standard deviation for each time metric
+            selection_time_mean = cumulative_selection_time / total_runs
+            selection_time_std = group['test_selection_time'].std(ddof=1) if len(group['test_selection_time']) > 1 else 0
+            training_time_mean = cumulative_training_time / total_runs
+            training_time_std = group['test_training_time'].std(ddof=1) if len(group['test_training_time']) > 1 else 0
+            total_time_mean = cumulative_total_time / total_runs
+            total_time_std = group['test_training_time'].std(ddof=1) if len(group['test_training_time']) > 1 else 0  # Assuming total time std deviation is similar to training time
 
-            sns.lineplot(data=df, x="len_training_points", y="test_accuracy", hue="strategy", palette=colors_dict, lw=2, marker="o", ax=ax_zoom, legend=False)
+            # Calculate mean and standard deviation for accuracy
+            accuracy_mean = group['test_accuracy'].mean()
+            accuracy_std = group['test_accuracy'].std(ddof=1) if len(group['test_accuracy']) > 1 else 0
 
-            if std_dev and std_dev in df.columns:
-                for strategy, color in colors_dict.items():
-                    subset = df[df['strategy'] == strategy]
-                    ax_zoom.fill_between(subset['len_training_points'], subset['test_accuracy'] - subset[std_dev], subset['test_accuracy'] + subset[std_dev], color=color, alpha=0.2)
+            # Append the results
+            results.extend([
+                [experiment_group, strategy, rounds_num, _additional_dimension, 'selection_time_seconds', selection_time_mean, selection_time_std],
+                [experiment_group, strategy, rounds_num, _additional_dimension, 'training_time_seconds', training_time_mean, training_time_std],
+                [experiment_group, strategy, rounds_num, _additional_dimension, 'total_time_seconds', total_time_mean, total_time_std],
+                [experiment_group, strategy, rounds_num, _additional_dimension, 'accuracy', accuracy_mean, accuracy_std]
+            ])
 
-            ax_zoom.set_xlim(x1, x2)
-            ax_zoom.set_ylim(y1, y2)
-            # ax_zoom.set_xticks([])
-            # ax_zoom.set_yticks([])
-            ax_zoom.set_xlabel('')
-            ax_zoom.set_ylabel('')
-            # ax_zoom.set_facecolor('whitesmoke')
+        _columns=['experiment_group', 'strategy', 'len_training_points']
+        _columns.extend([_additional_dimension_column_name])
+        _columns.extend(['kpi', 'mean_value', 'std_value'])
 
-            ax_zoom.grid(True, color='gray', alpha=0.3)
+    
 
-            # Draw rectangle in the main plot
-            rect = Rectangle((x1, y1), x2 - x1, y2 - y1, fill=False, edgecolor='lightgray', linestyle='dashed')
-            ax.add_patch(rect)
+    else:
+        grouped_df = df.groupby(['experiment_group', 'strategy', 'len_training_points'])
 
-            # Add connection lines
-            con1 = ConnectionPatch(xyA=(x1, y1), xyB=(pos[0], pos[1]), coordsA="data", coordsB="axes fraction", axesA=ax, axesB=ax, color='lightgray')
-            con2 = ConnectionPatch(xyA=(x2, y1), xyB=(pos[0] + pos[2], pos[1]), coordsA="data", coordsB="axes fraction", axesA=ax, axesB=ax, color='lightgray')
+        # Loop over each group
+        for (experiment_group, strategy, rounds_num), group in grouped_df:
+            # Calculate individual time metrics
+            selection_time = group['test_selection_time'].sum()
+            training_time = group['test_training_time'].sum()
+            total_time = selection_time + training_time
 
-            ax.add_artist(con1)
-            ax.add_artist(con2)
+            total_runs = group['test_selection_time'].shape[0]
+
+            # Calculate cumulative time metrics if required
+            if cumulative_time:
+                cumulative_selection_time = df[(df['experiment_group'] == experiment_group) &
+                                               (df['strategy'] == strategy) &
+                                               (df['len_training_points'] <= rounds_num)]['test_selection_time'].sum()
+                cumulative_training_time = df[(df['experiment_group'] == experiment_group) &
+                                              (df['strategy'] == strategy) &
+                                              (df['len_training_points'] <= rounds_num)]['test_training_time'].sum()
+                cumulative_total_time = cumulative_selection_time + cumulative_training_time
+            else:
+                cumulative_selection_time = selection_time
+                cumulative_training_time = training_time
+                cumulative_total_time = total_time
+
+            # Calculate mean and standard deviation for each time metric
+            selection_time_mean = cumulative_selection_time / total_runs
+            selection_time_std = group['test_selection_time'].std(ddof=1) if len(group['test_selection_time']) > 1 else 0
+            training_time_mean = cumulative_training_time / total_runs
+            training_time_std = group['test_training_time'].std(ddof=1) if len(group['test_training_time']) > 1 else 0
+            total_time_mean = cumulative_total_time / total_runs
+            total_time_std = group['test_training_time'].std(ddof=1) if len(group['test_training_time']) > 1 else 0  # Assuming total time std deviation is similar to training time
+
+            # Calculate mean and standard deviation for accuracy
+            accuracy_mean = group['test_accuracy'].mean()
+            accuracy_std = group['test_accuracy'].std(ddof=1) if len(group['test_accuracy']) > 1 else 0
+
+            # Append the results
+            results.extend([
+                [experiment_group, strategy, rounds_num, 'selection_time_seconds', selection_time_mean, selection_time_std],
+                [experiment_group, strategy, rounds_num, 'training_time_seconds', training_time_mean, training_time_std],
+                [experiment_group, strategy, rounds_num, 'total_time_seconds', total_time_mean, total_time_std],
+                [experiment_group, strategy, rounds_num, 'accuracy', accuracy_mean, accuracy_std]
+            ])
+
+            _columns = ['experiment_group', 'strategy', 'len_training_points', 'kpi', 'mean_value', 'std_value']
+
+    # Convert results to DataFrame
+    df_basic_kpis = pd.DataFrame(results, columns=_columns)    
+    
+
+    ##################################################################################################################################################################
+    # Calculate Lifts
+    ##################################################################################################################################################################    
+    
+    results_list = []
 
 
-# Label Efficiency
+    if _additional_dimension:
+
+
+        # Iterate over each group of experiment_group and rounds
+        for (group, rnd), group_df in df_basic_kpis.groupby(['strategy', 'len_training_points']):
+            # Get unique strategies
+            strategies = group_df[_additional_dimension_column_name].unique()
+
+
+            
+
+            # Create all combinations of strategies
+            for strat1, strat2 in product(strategies, repeat=2):
+                # Filter data for each strategy
+                df_strat1 = group_df[group_df[_additional_dimension_column_name] == strat1]
+                df_strat2 = group_df[group_df[_additional_dimension_column_name] == strat2]
+
+                # Calculate deltas and round them to 1 decimal place
+                delta_total_time = round((df_strat1[df_strat1['kpi'] == 'total_time_seconds']['mean_value'].values[0] -
+                                          df_strat2[df_strat2['kpi'] == 'total_time_seconds']['mean_value'].values[0]), 4)
+
+                delta_accuracy = round((df_strat1[df_strat1['kpi'] == 'accuracy']['mean_value'].values[0] -
+                                        df_strat2[df_strat2['kpi'] == 'accuracy']['mean_value'].values[0]), 4) * 100
+
+                # Calculate lift, handle division by zero
+                lift = 0 if delta_total_time == 0 or delta_accuracy == 0 else delta_accuracy / delta_total_time
+                lift = round(lift, 4)
+
+                # Determine the sign for delta_total_time and delta_accuracy
+                sign_total_time = "+" if delta_total_time >= 0 else "-"
+                sign_accuracy = "+" if delta_accuracy >= 0 else "-"
+
+                # Create a new row and add it to the results list
+                new_row = {
+                    'experiment_group': group_df['experiment_group'].unique()[0],
+                    'len_training_points': rnd,
+                    'strategy': group,
+                    _additional_dimension_column_name: strat1,
+                    'compared_strategy': strat2,
+                    'sign_delta_total_time': sign_total_time,
+                    'sign_delta_accuracy': sign_accuracy,
+                    'delta_total_time': delta_total_time,
+                    'delta_accuracy': delta_accuracy,
+                    'lift': lift
+                }
+                results_list.append(new_row)
+
+        # Concatenate all results into a DataFrame
+        df_lift = pd.concat([pd.DataFrame([row]) for row in results_list], ignore_index=True)
+        df_lift_temp = df_lift.copy()
+
+
+    else:
+
+        # Iterate over each group of experiment_group and rounds
+        for (group, rnd), group_df in df_basic_kpis.groupby(['experiment_group', 'len_training_points']):
+            # Get unique strategies
+            strategies = group_df['strategy'].unique()
+
+            # Create all combinations of strategies
+            for strat1, strat2 in product(strategies, repeat=2):
+                # Filter data for each strategy
+                df_strat1 = group_df[group_df['strategy'] == strat1]
+                df_strat2 = group_df[group_df['strategy'] == strat2]
+
+                # Calculate deltas and round them to 1 decimal place
+                delta_total_time = round((df_strat1[df_strat1['kpi'] == 'total_time_seconds']['mean_value'].values[0] -
+                                          df_strat2[df_strat2['kpi'] == 'total_time_seconds']['mean_value'].values[0]), 4)
+
+                delta_accuracy = round((df_strat1[df_strat1['kpi'] == 'accuracy']['mean_value'].values[0] -
+                                        df_strat2[df_strat2['kpi'] == 'accuracy']['mean_value'].values[0]), 4) * 100
+
+                # Calculate lift, handle division by zero
+                lift = 0 if delta_total_time == 0 or delta_accuracy == 0 else delta_accuracy / delta_total_time
+                lift = round(lift, 4)
+
+                # Determine the sign for delta_total_time and delta_accuracy
+                sign_total_time = "+" if delta_total_time >= 0 else "-"
+                sign_accuracy = "+" if delta_accuracy >= 0 else "-"
+
+                # Create a new row and add it to the results list
+                new_row = {
+                    'experiment_group': group,
+                    'len_training_points': rnd,
+                    'strategy': strat1,
+                    'compared_strategy': strat2,
+                    'sign_delta_total_time': sign_total_time,
+                    'sign_delta_accuracy': sign_accuracy,
+                    'delta_total_time': delta_total_time,
+                    'delta_accuracy': delta_accuracy,
+                    'lift': lift
+                }
+                results_list.append(new_row)
+
+        # Concatenate all results into a DataFrame
+        df_lift = pd.concat([pd.DataFrame([row]) for row in results_list], ignore_index=True)
+        df_lift_temp = df_lift.copy()
+
+
+
+    ##################################################################################################################################################################
+    # Combine df's
+    ##################################################################################################################################################################            
+
+    if _additional_dimension:
+
+        df_basic_kpis['compared_strategy'] = '-'
+        df_basic_kpis = df_basic_kpis[['experiment_group', 'strategy', 'compared_strategy', 'len_training_points', _additional_dimension_column_name, 'kpi', 'mean_value', 'std_value']]
+
+        df_lift['kpi']  = 'lift'
+        df_lift['mean_value']  = df_lift['lift']
+        df_lift['std_value']  = None
+        df_lift = df_lift[['experiment_group', 'strategy', 'compared_strategy', 'len_training_points', _additional_dimension_column_name, 'kpi', 'mean_value', 'std_value']]
+        
+        df_lift['compared_strategy']        
+
+        if _additional_dimension_column_name == 'epochs':            
+            # def extract_number(label):
+            #     match = re.search(r'\d+', label)
+            #     return int(match.group()) if match else 0
+
+            # df_lift = df_lift[df_lift['compared_strategy'] == df_lift['compared_strategy'].apply(extract_number).max()]
+            df_lift = df_lift[df_lift['compared_strategy'] == df_lift['compared_strategy'].max()]
+        else:
+            df_lift = df_lift[df_lift['compared_strategy'] == df_lift['compared_strategy'].min()]
+
+
+    else:
+        df_basic_kpis['compared_strategy'] = '-'
+        df_basic_kpis = df_basic_kpis[['experiment_group', 'strategy', 'compared_strategy', 'len_training_points', 'kpi', 'mean_value', 'std_value']]
+
+        df_lift['kpi']  = 'lift'
+        df_lift['mean_value']  = df_lift['lift']
+        df_lift['std_value']  = None
+        df_lift = df_lift[['experiment_group', 'strategy', 'compared_strategy', 'len_training_points', 'kpi', 'mean_value', 'std_value']]
+        df_lift = df_lift[df_lift['compared_strategy'] == 'random']
+
+    merged_df = pd.concat([df_basic_kpis, df_lift])
+    merged_df = merged_df.reset_index(drop=True)
+
+
+    ##################################################################################################################################################################
+    # Final Data Frame
+    ##################################################################################################################################################################            
+
+    return merged_df, df_lift_temp, df_basic_kpis
+
+def timming_table_consolidation(df, opt_visualize_std=False, _additional_dimension_column_name=None):
+
+
+    if _additional_dimension_column_name:
+
+
+        if opt_visualize_std:
+            # Create pivot tables for mean and standard deviation values
+            mean_pivot = df.pivot_table(index=['experiment_group', 'strategy', 'kpi', _additional_dimension_column_name], columns='len_training_points', values='mean_value')
+            std_pivot = df.pivot_table(index=['experiment_group', 'strategy', 'kpi', _additional_dimension_column_name], columns='len_training_points', values='std_value')
+
+            # Round the mean values
+            mean_pivot = mean_pivot.round(1)
+
+            # Function to combine mean and standard deviation for 'accuracy'
+            def combine_mean_std(row):
+                return pd.Series({mean_col: "{} ± {}".format(row[mean_col], round(std_pivot.loc[row.name, mean_col], 4))
+                                  if row.name[2] == 'accuracy' and pd.notna(std_pivot.loc[row.name, mean_col])
+                                  else row[mean_col]
+                                  for mean_col in mean_pivot.columns})
+
+            # Apply the combine_mean_std function
+            combined_pivot = mean_pivot.apply(combine_mean_std, axis=1)
+            combined_pivot.columns = [f'{col} points' for col in combined_pivot.columns]
+            combined_pivot = combined_pivot.reset_index()
+
+
+            return combined_pivot
+
+        else:
+            # Process for when opt_visualize_std is False
+            kpi_order = ['selection_time_seconds', 'training_time_seconds', 'total_time_seconds', 'accuracy', 'lift']
+
+            df_melted = df.melt(id_vars=['experiment_group', 'strategy', 'len_training_points', 'kpi', _additional_dimension_column_name], value_vars=['mean_value'])
+            df_melted['value'] = df_melted['value'].round(1)
+            df_melted['kpi'] = pd.Categorical(df_melted['kpi'], categories=kpi_order, ordered=True)
+
+            pivot_table = df_melted.pivot_table(index=['experiment_group', 'strategy', 'kpi', _additional_dimension_column_name], columns='len_training_points', values='value')
+            pivot_table.columns = [f'{col} points' for col in pivot_table.columns]
+            pivot_table = pivot_table.reset_index()
+            pivot_table = pivot_table.sort_values(by=[_additional_dimension_column_name, 'strategy', 'experiment_group'], ascending=[True, False, False])
+
+            return pivot_table
+
+
+
+    else:
+
+        if opt_visualize_std:
+            # Create pivot tables for mean and standard deviation values
+            mean_pivot = df.pivot_table(index=['experiment_group', 'strategy', 'kpi'], columns='len_training_points', values='mean_value')
+            std_pivot = df.pivot_table(index=['experiment_group', 'strategy', 'kpi'], columns='len_training_points', values='std_value')
+
+            # Round the mean values
+            mean_pivot = mean_pivot.round(1)
+
+            # Function to combine mean and standard deviation for 'accuracy'
+            def combine_mean_std(row):
+                return pd.Series({mean_col: "{} ± {}".format(row[mean_col], round(std_pivot.loc[row.name, mean_col], 4))
+                                  if row.name[2] == 'accuracy' and pd.notna(std_pivot.loc[row.name, mean_col])
+                                  else row[mean_col]
+                                  for mean_col in mean_pivot.columns})
+
+            # Apply the combine_mean_std function
+            combined_pivot = mean_pivot.apply(combine_mean_std, axis=1)
+            combined_pivot.columns = [f'{col} points' for col in combined_pivot.columns]
+            combined_pivot = combined_pivot.reset_index()
+
+
+            return combined_pivot
+
+        else:
+            # Process for when opt_visualize_std is False
+            kpi_order = ['selection_time_seconds', 'training_time_seconds', 'total_time_seconds', 'accuracy', 'lift']
+
+            df_melted = df.melt(id_vars=['experiment_group', 'strategy', 'len_training_points', 'kpi'], value_vars=['mean_value'])
+            df_melted['value'] = df_melted['value'].round(1)
+            df_melted['kpi'] = pd.Categorical(df_melted['kpi'], categories=kpi_order, ordered=True)
+
+            pivot_table = df_melted.pivot_table(index=['experiment_group', 'strategy', 'kpi'], columns='len_training_points', values='value')
+            pivot_table.columns = [f'{col} points' for col in pivot_table.columns]
+            pivot_table = pivot_table.reset_index()
+            pivot_table = pivot_table.sort_values(by=['strategy', 'experiment_group'], ascending=[False, False])
+
+            return pivot_table
+
+def f_order_kpis(df, _kpi_column, _kpi_order, _sort_values_by, _ascending_values):  
+
+    def get_kpi_order(kpi):
+        try:
+            return _kpi_order.index(kpi)
+        except ValueError:
+            return len(_kpi_order)  # Assign a large index to unknown or new KPIs
+
+    
+    _sort_values_by = ['kpi_sort_index'] + _sort_values_by
+    _ascending_values = [True] + _ascending_values
+
+    # Sort the DataFrame using the custom function
+    df = df.assign(
+        kpi_sort_index=df[_kpi_column].apply(get_kpi_order)
+    ).sort_values(
+        by=_sort_values_by,
+        ascending=_ascending_values
+    ).drop(columns='kpi_sort_index')
+
+    return df
+
+def to_latex_with_multirow_and_lines(df, merge_column):
+    unique_values = df[merge_column].unique()
+    # Start the tabular and make column names bold
+    latex_str = "\\begin{tabular}{" + "l" * len(df.columns) + "}\n\\toprule\n"
+    latex_str += " & ".join(["\\textbf{" + col + "}" for col in df.columns]) + " \\\\\n\\midrule\n"
+
+    for value in unique_values:
+        subset = df[df[merge_column] == value]
+        row_span = len(subset)
+
+        first_row = True
+        for _, row in subset.iterrows():
+            if first_row:
+                latex_str += "\\multirow{" + str(row_span) + "}{*}{" + value.replace("%", "\\%") + "} & "
+                first_row = False
+            else:
+                latex_str += " & "
+
+            latex_str += " & ".join([str(row[col]) for col in df.columns if col != merge_column]) + " \\\\\n"
+
+        # Add a horizontal line after each metric group
+        latex_str += "\\midrule\n"
+
+    latex_str += "\\bottomrule\n\\end{tabular}"
+    return latex_str
+
+
 def calculate_efficiency(df_active, df_random):
     efficiency_list = []
     accuracy_list = sorted(set(df_active['test_accuracy'].tolist() + df_random['test_accuracy'].tolist()))
@@ -457,7 +860,7 @@ def calculate_efficiencies(df_active, df_random):
 
     return accuracy_dict, efficiency_dict
 
-def plot_efficiencies(accuracy_dict, efficiency_dict, colors_dict=None):
+def plot_efficiencies(accuracy_dict, efficiency_dict, colors_dict=None, opt_fontsize=None):
 
     plt.figure(figsize=(10,6))
 
@@ -474,34 +877,58 @@ def plot_efficiencies(accuracy_dict, efficiency_dict, colors_dict=None):
 
         plt.plot(valid_accuracy, valid_efficiency, marker='o', label=strategy, color=color)
 
-    plt.xlabel('Accuracy')
-    plt.ylabel('Labelling Efficiency')
-    plt.title('Labelling Efficiency vs Accuracy')
+    plt.xlabel('Accuracy', fontsize=opt_fontsize)
+    plt.ylabel('Labelling Efficiency', fontsize=opt_fontsize)
+    plt.title('Labelling Efficiency vs Accuracy',fontsize=opt_fontsize+2)
     plt.legend()
     plt.grid(True)
     plt.show()
 
-def plot_label_efficiency(df, colors_dict=None):
+def adjusted_plot_label_efficiency(df, ax, colors_dict=None, std_dev=None, opt_fontsize=12, opt_show_legend=False):
 
-  df_random = _temp_df[_temp_df['strategy'] == 'random']
-  df_active = _temp_df[_temp_df['strategy'] != 'random']
 
-  # calculate_efficiencies
-  accuracy_dict, efficiency_dict = calculate_efficiencies(df_active, df_random)
-  plot_efficiencies(accuracy_dict, efficiency_dict, colors_dict)
-
-def adjusted_plot_label_efficiency(df, ax, colors_dict=None, std_dev=None):
 
     # Set the background color of the axes
-    # ax.set_facecolor('white')      
+    # ax.set_facecolor('white')
 
-    # Change the color and alpha of the grid    
-    ax.grid(True, color='gray', alpha=0.5)    
+    # Change the color and alpha of the grid
+    ax.grid(True, color='gray', alpha=0.5)
 
     df_random = df[df['strategy'] == 'random']
     df_active = df[df['strategy'] != 'random']
 
     accuracy_dict, efficiency_dict = calculate_efficiencies(df_active, df_random)
+
+
+    ##############################################################################################################
+    # Initialize the minimum test accuracy for deviation to infinity
+    min_test_accuracy_for_deviation = float('inf')
+
+    # Loop through each strategy and its efficiencies
+    for strategy, efficiencies in efficiency_dict.items():
+        for i, efficiency in enumerate(efficiencies):
+            if efficiency is not None and efficiency != 1.0:
+                # Find the corresponding test accuracy value
+                test_accuracy_value = accuracy_dict[strategy][i]
+                # Update the minimum test accuracy if this is the earliest deviation from 1.0
+                if test_accuracy_value < min_test_accuracy_for_deviation:
+                    min_test_accuracy_for_deviation = test_accuracy_value
+                break  # Stop checking once the first deviation is found for this strategy
+
+    # If no deviation is found, use the overall minimum test accuracy
+    if min_test_accuracy_for_deviation == float('inf'):
+        min_test_accuracy_for_deviation = df['test_accuracy'].min()
+    else:
+        # Subtract a buffer from the minimum value (e.g., 1 or any value that makes sense for your data)
+        buffer = 1
+        min_test_accuracy_for_deviation -= buffer
+
+    # Find the maximum test accuracy from the DataFrame
+    max_test_accuracy = df['test_accuracy'].max()
+
+    ##############################################################################################################
+
+
 
     for strategy in accuracy_dict.keys():
         if colors_dict and strategy in colors_dict:
@@ -513,7 +940,8 @@ def adjusted_plot_label_efficiency(df, ax, colors_dict=None, std_dev=None):
         valid_accuracy = [accuracy_dict[strategy][i] for i in valid_indices]
         valid_efficiency = [efficiency_dict[strategy][i] for i in valid_indices]
 
-        ax.plot(valid_accuracy, valid_efficiency, lw=1, marker="o", label=strategy, color=color)
+        ax.plot(valid_accuracy, valid_efficiency, lw=1.5, marker="o", label=strategy, color=color, linestyle='-')
+
 
         if std_dev and std_dev in df.columns:
             subset = df[df['strategy'] == strategy]
@@ -526,11 +954,21 @@ def adjusted_plot_label_efficiency(df, ax, colors_dict=None, std_dev=None):
         random_color = 'black'
 
     all_accuracies = sorted(set(sum(accuracy_dict.values(), [])))
-    ax.plot(all_accuracies, [1.0] * len(all_accuracies), label='random', color=random_color, lw=1, marker="o", markersize=4)
+    ax.plot(all_accuracies, [1.0] * len(all_accuracies), label='random', color=random_color, lw=1.5, markersize=4) #marker="o"
 
-    ax.set_xlabel('Test Accuracy')
-    ax.set_ylabel('Labelling Efficiency')
-    ax.set_title('Labelling Efficiency vs. Accuracy')
+    ax.set_xlabel('Test Accuracy', fontsize=opt_fontsize)
+    ax.set_ylabel('Labelling Efficiency', fontsize=opt_fontsize)
+    ax.set_title('Labelling Efficiency vs. Accuracy', fontsize=opt_fontsize+2)
+
+
+
+    # Adjust x-axis to start from the first data point and set custom ticks
+    # min_test_accuracy = df['test_accuracy'].min()
+    # max_test_accuracy = df['test_accuracy'].max()
+    # ax.set_xlim(left=0, right=max_len_training_points)
+    # ax.set_xlim(left=min_test_accuracy, right=max_test_accuracy)
+    ax.set_xlim(left=min_test_accuracy_for_deviation, right=max_test_accuracy)
+
 
 
 
@@ -546,81 +984,156 @@ def adjusted_plot_label_efficiency(df, ax, colors_dict=None, std_dev=None):
     sorted_handles, sorted_labels = zip(*handles_labels_sorted)
 
     # Create the legend with the sorted handles and labels
-    ax.legend(sorted_handles, sorted_labels)
+    if opt_show_legend:
+      ax.legend(sorted_handles, sorted_labels, fontsize=opt_fontsize-2)
+    ax.tick_params(axis='both', which='major', labelsize=opt_fontsize-2)
+
+
 
     ax.grid(True)            
 
+def adjusted_plot_with_combined_features(df, ax, zoom_regions=None, std_dev=None, colors_dict=None, opt_fontsize=12, opt_show_legend=False, opt_title=None, use_distinct_colors=False, use_color_variations=False, legend_column_name=None):
 
-# Time Calculation
-def df_grouped_by_time(df):
-
-
-    def convert_to_hours_and_minutes(value):
-        if isinstance(value, str):
-            return value
-
-        hours = value // 60
-        minutes = value % 60
-
-        if hours > 0:
-            return f"{int(hours)} Hour(s) and {int(minutes)} Minute(s)"
+    def thousands_formatter(x, pos):
+        """Converts large numbers to 'k' notation for thousands, and leaves smaller numbers unchanged."""
+        if x >= 1000:
+            return '{:.1f}k'.format(float(x / 1000))
         else:
-            return f"{int(minutes)} Minute(s)"
+            return '{:.0f}'.format(int(x))            
 
 
-    def p80(x):
-        return np.percentile(x, 80)
+    def adjust_color(color, factor=0.2):
+        """Adjusts the brightness of a color."""
+        return tuple(min(max(comp + factor * (0.5 - comp), 0), 1) for comp in color)
 
-    grouped = df.groupby(['experiment', 'strategy']).agg({
-        'test_selection_time': ['sum'],
-        'test_training_time': ['sum'],
-        'test_accuracy': ['max', 'mean', 'median']
-    })
+    def mix_colors(color1, color2, alpha=0.5):
+        """Mixes two colors."""
+        color1_rgba = mcolors.to_rgba(color1)
+        color2_rgba = mcolors.to_rgba(color2)
+        return mcolors.to_hex([(1 - alpha) * c1 + alpha * c2 for c1, c2 in zip(color1_rgba[:3], color2_rgba[:3])])
 
-    # Convert seconds to minutes
-    grouped['test_selection_time'] = grouped['test_selection_time'] / 60
-    grouped['test_training_time'] = grouped['test_training_time'] / 60
+    def create_color_variations(colors_dict, num_shades=3):
+        """Creates variations of the given colors."""
+        base_colors = ['white', 'black', 'gray']  # Base colors for mixing
+        color_variations = {}
+        for strategy, color in colors_dict.items():
+            if color in ['black', '#000000', (0, 0, 0)]:
+                color_variations[strategy] = ['black'] * num_shades
+                continue
+            shades = [mix_colors(color, base_color, alpha=i / (num_shades - 1)) for base_color in base_colors for i in range(num_shades)]
+            color_variations[strategy] = [color] + shades
+        return color_variations
 
-    # Reformat the column names
-    grouped.columns = ['_'.join(col).strip() for col in grouped.columns.values]
-    grouped.reset_index(inplace=True)
+    def get_line_style(experiment_group):
+        """Defines line styles based on the experiment group."""
+        # styles = ['-', '--', '-.', ':']
+        styles = ['-']
+        return styles[hash(experiment_group) % len(styles)]
 
-    # Rename the columns
-    grouped.rename(columns={
-        'test_selection_time_sum': 'Total Selection Time (minutes)',
-        'test_training_time_sum': 'Total Training Time (minutes)',
-        'test_accuracy_max': 'Max Accuracy',
-        'test_accuracy_mean': 'Average Accuracy',
-        'test_accuracy_median': 'Median Accuracy'
-    }, inplace=True)
+    ax.grid(True, color='gray', alpha=0.5)
 
-    # Rounding and converting to integer
-    for column in grouped.columns[2:]:
-        if 'Time' in column:
-            grouped[column] = grouped[column].round().astype('Int64')
-            grouped[column] = grouped[column].apply(convert_to_hours_and_minutes)
-        else:
-            grouped[column] = grouped[column].round(2)
+    if colors_dict is None:
+        colors_dict = dict(zip(df['strategy'].unique(), sns.color_palette(n_colors=len(df['strategy'].unique()))))
 
-    # Replace NaNs with 'Not Available'
-    grouped.fillna('Not Available', inplace=True)
+    if use_distinct_colors:
+        distinct_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+        for i, strategy in enumerate(colors_dict.keys()):
+            colors_dict[strategy] = distinct_colors[i % len(distinct_colors)]
 
-    return grouped
+    if use_color_variations:
+        colors_dict = create_color_variations(colors_dict)
 
-def timming_table_consolidation(df):
+    colors_dict['random'] = 'black'
 
-  # Melting the DataFrame to have 'rounds', 'strategy', 'variable', and 'value'
-  df_melted = df.melt(id_vars=['strategy', 'rounds'], value_vars=['test_selection_time', 'test_training_time'])
+    if legend_column_name:
 
-  df_melted['value'] = df_melted['value'].round(1)
+      for (strategy, experiment_group), group_data in df.groupby([legend_column_name, 'experiment_group']):
+          color = colors_dict[strategy]
+          line_style = get_line_style(experiment_group) if legend_column_name in df.columns else '-'
+          sns.lineplot(data=group_data, x="len_training_points", y="test_accuracy", lw=2, marker="o", label=strategy, color=color, linestyle=line_style, ax=ax)    
 
-  # Create a pivot table with 'strategy' and 'variable' as rows (multi-index) and 'rounds' as columns
-  pivot_table = df_melted.pivot_table(index=['strategy', 'variable'], columns='rounds', values='value', aggfunc='first')
+    else:
 
-  # Rename the 'variable' level with more descriptive names
-  pivot_table.index.set_levels(['selection_time', 'training_time'], level=1, inplace=True)
+      for (strategy, experiment_group), group_data in df.groupby(['strategy', 'experiment_group']):
+          color = colors_dict[strategy]
+          line_style = get_line_style(experiment_group) if 'strategy' in df.columns else '-'
+          sns.lineplot(data=group_data, x="len_training_points", y="test_accuracy", lw=2, marker="o", label=strategy, color=color, linestyle=line_style, ax=ax)
 
-  # Optionally, you can also reset the index to make 'strategy' and 'type' as regular columns
-  pivot_table.reset_index(inplace=True)
 
-  return pivot_table    
+
+    ax.set_xlim(left=df['len_training_points'].min(), right=df['len_training_points'].max())
+    ax.xaxis.set_major_locator(ticker.MultipleLocator(df['len_training_points'].min()))
+    ax.xaxis.set_major_formatter(ticker.FuncFormatter(thousands_formatter))
+
+    ax.set_xlabel('Labeled Set Size', fontsize=opt_fontsize)
+    ax.set_ylabel('Test Accuracy', fontsize=opt_fontsize)
+    ax.set_title(opt_title if opt_title else 'AL Strategies Comparison', fontsize=opt_fontsize + 2)
+
+    if opt_show_legend:
+        ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=3, fontsize=opt_fontsize - 4, frameon=True)
+    else:
+        ax.legend_.remove() if ax.legend_ else None
+
+    
+    if legend_column_name:    
+      legend_order = sorted(df[legend_column_name].unique(), reverse=False)
+
+    else:    
+      legend_order = sorted(df['strategy'].unique(), reverse=True)
+
+    # Get handles and labels from the current plot
+    handles, labels = ax.get_legend_handles_labels()
+
+    # Sort handles and labels according to the defined order
+    handles_labels_sorted = sorted(zip(handles, labels), key=lambda x: legend_order.index(x[1]) if x[1] in legend_order else -1)
+    sorted_handles, sorted_labels = zip(*handles_labels_sorted)
+
+    # Create the legend with the sorted handles and labels
+    if opt_show_legend:
+        ax.legend(sorted_handles, sorted_labels, loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=3, fontsize=opt_fontsize - 4, frameon=True)
+    else:
+        ax.legend_.remove() if ax.legend_ else None
+
+    ax.tick_params(axis='both', which='major', labelsize=opt_fontsize - 2)
+    ax.grid(True)
+
+
+
+    if zoom_regions:
+        for region in zoom_regions:
+            x1, x2, y1, y2 = region['x1'], region['x2'], region['y1'], region['y2']
+            pos = region['pos']
+
+            ax_zoom = ax.inset_axes(pos)
+
+            if legend_column_name:
+                sns.lineplot(data=df, x="len_training_points", y="test_accuracy", hue=legend_column_name, palette=colors_dict, lw=2, marker="o", ax=ax_zoom, legend=False)
+            else:
+                sns.lineplot(data=df, x="len_training_points", y="test_accuracy", hue="strategy", palette=colors_dict, lw=2, marker="o", ax=ax_zoom, legend=False)
+
+
+            if std_dev and std_dev in df.columns:
+                for strategy, color in colors_dict.items():
+                    subset = df[df['strategy'] == strategy]
+                    ax_zoom.fill_between(subset['len_training_points'], subset['test_accuracy'] - subset[std_dev], subset['test_accuracy'] + subset[std_dev], color=color, alpha=0.2)
+
+            ax_zoom.set_xlim(x1, x2)
+            ax_zoom.set_ylim(y1, y2)
+            # ax_zoom.set_xticks([])
+            # ax_zoom.set_yticks([])
+            ax_zoom.set_xlabel('')
+            ax_zoom.set_ylabel('')
+            # ax_zoom.set_facecolor('whitesmoke')
+
+            ax_zoom.grid(True, color='gray', alpha=0.3)
+
+            # Draw rectangle in the main plot
+            rect = Rectangle((x1, y1), x2 - x1, y2 - y1, fill=False, edgecolor='lightgray', linestyle='dashed')
+            ax.add_patch(rect)
+
+            # Add connection lines
+            con1 = ConnectionPatch(xyA=(x1, y1), xyB=(pos[0], pos[1]), coordsA="data", coordsB="axes fraction", axesA=ax, axesB=ax, color='lightgray')
+            con2 = ConnectionPatch(xyA=(x2, y1), xyB=(pos[0] + pos[2], pos[1]), coordsA="data", coordsB="axes fraction", axesA=ax, axesB=ax, color='lightgray')
+
+            ax.add_artist(con1)
+            ax.add_artist(con2)
