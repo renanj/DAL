@@ -19,7 +19,7 @@ import numpy as np
 import pickle
 import os
 import time
-
+import re 
 
 from matplotlib.patches import Rectangle, ConnectionPatch
 from importlib import reload
@@ -44,6 +44,38 @@ import matplotlib.ticker as ticker
 import matplotlib.colors as mcolors
 
 from sklearn.metrics import silhouette_score
+
+
+
+
+# extract_run_number
+# extract_experiment_name
+# get_image_path_and_label
+# apply_get_image_path_and_label
+# find_paths
+# find_subdirectories_names
+# process_logs_dict
+# process_used_indices_dict
+# process_experiment_path
+# process_path
+
+# evaluate_tsne_embedding
+# optimize_tsne_params
+# generate_tsne_embeddings_for_datasets
+
+# extract_number
+# extract_run_number
+# extract_experiment_name
+# rename_dataframe_elements
+# create_df_metrics
+# timming_table_consolidation
+# f_order_kpis
+# to_latex_with_multirow_and_lines
+# calculate_efficiency
+# calculate_efficiencies
+# plot_efficiencies
+# adjusted_plot_label_efficiency
+# adjusted_plot_with_combined_features
 
 
 
@@ -542,6 +574,22 @@ def create_df_metrics(df, cumulative_time=True, dict_renames=None, _additional_d
     
     results_list = []
 
+    def get_final_signal_and_factor(sign_accuracy, sign_time):
+        signal_pair = (sign_accuracy, sign_time)
+        signal_factor_map = {
+            ('+', '+'): ('+', 2),
+            ('-', '-'): ('-', 1),
+            ('+', '-'): ('+', 5),
+            ('-', '+'): ('-', 10),
+            # Additions for Neutral cases
+            ('Neutral', '+'): ('+', 2),  # Example, adjust as needed
+            ('+', 'Neutral'): ('+', 2),  # Example, adjust as needed
+            ('Neutral', '-'): ('-', 5),  # Example, adjust as needed
+            ('-', 'Neutral'): ('-', 5),  # Example, adjust as needed
+            ('Neutral', 'Neutral'): ('+', 0)  # Example, adjust as needed
+        }
+        return signal_factor_map.get(signal_pair, ('+', 0))  # Default if pair not found
+
 
     if _additional_dimension:
 
@@ -560,20 +608,37 @@ def create_df_metrics(df, cumulative_time=True, dict_renames=None, _additional_d
                 df_strat1 = group_df[group_df[_additional_dimension_column_name] == strat1]
                 df_strat2 = group_df[group_df[_additional_dimension_column_name] == strat2]
 
+
                 # Calculate deltas and round them to 1 decimal place
-                delta_total_time = round((df_strat1[df_strat1['kpi'] == 'total_time_seconds']['mean_value'].values[0] -
-                                          df_strat2[df_strat2['kpi'] == 'total_time_seconds']['mean_value'].values[0]), 4)
+                delta_total_time = df_strat1[df_strat1['kpi'] == 'total_time_seconds']['mean_value'].values[0] /
+                                   df_strat2[df_strat2['kpi'] == 'total_time_seconds']['mean_value'].values[0] - 1
 
-                delta_accuracy = round((df_strat1[df_strat1['kpi'] == 'accuracy']['mean_value'].values[0] -
-                                        df_strat2[df_strat2['kpi'] == 'accuracy']['mean_value'].values[0]), 4) * 100
+                delta_accuracy = df_strat1[df_strat1['kpi'] == 'accuracy']['mean_value'].values[0] /
+                                 df_strat2[df_strat2['kpi'] == 'accuracy']['mean_value'].values[0] - 1
 
-                # Calculate lift, handle division by zero
-                lift = 0 if delta_total_time == 0 or delta_accuracy == 0 else delta_accuracy / delta_total_time
+                
+                 # Determine the sign for delta_total_time and delta_accuracy
+                sign_total_time = "+" if delta_total_time > 0 else ("Neutral" if delta_total_time == 0 else "-")
+                sign_accuracy = "+" if delta_accuracy > 0 else ("Neutral" if delta_accuracy == 0 else "-")                
+
+
+                final_signal, factor = get_final_signal_and_factor(sign_accuracy, sign_total_time)
+
+
+                # Calculate lift            
+                if delta_total_time == 0 and delta_accuracy == 0:
+                    lift = 0  
+                elif delta_total_time == 0 and delta_accuracy != 0:
+                    lift = delta_accuracy  
+                elif delta_total_time != 0 and delta_accuracy == 0:
+                    lift = delta_total_time  
+                else:
+                    lift = delta_accuracy / delta_total_time  
+
+                lift *= final_signal
+                lift *= factor
                 lift = round(lift, 4)
 
-                # Determine the sign for delta_total_time and delta_accuracy
-                sign_total_time = "+" if delta_total_time >= 0 else "-"
-                sign_accuracy = "+" if delta_accuracy >= 0 else "-"
 
                 # Create a new row and add it to the results list
                 new_row = {
@@ -609,19 +674,34 @@ def create_df_metrics(df, cumulative_time=True, dict_renames=None, _additional_d
                 df_strat2 = group_df[group_df['strategy'] == strat2]
 
                 # Calculate deltas and round them to 1 decimal place
-                delta_total_time = round((df_strat1[df_strat1['kpi'] == 'total_time_seconds']['mean_value'].values[0] -
-                                          df_strat2[df_strat2['kpi'] == 'total_time_seconds']['mean_value'].values[0]), 4)
+                delta_total_time = df_strat1[df_strat1['kpi'] == 'total_time_seconds']['mean_value'].values[0] /
+                                   df_strat2[df_strat2['kpi'] == 'total_time_seconds']['mean_value'].values[0] - 1
 
-                delta_accuracy = round((df_strat1[df_strat1['kpi'] == 'accuracy']['mean_value'].values[0] -
-                                        df_strat2[df_strat2['kpi'] == 'accuracy']['mean_value'].values[0]), 4) * 100
+                delta_accuracy = df_strat1[df_strat1['kpi'] == 'accuracy']['mean_value'].values[0] /
+                                 df_strat2[df_strat2['kpi'] == 'accuracy']['mean_value'].values[0] - 1
 
-                # Calculate lift, handle division by zero
-                lift = 0 if delta_total_time == 0 or delta_accuracy == 0 else delta_accuracy / delta_total_time
+                
+                 # Determine the sign for delta_total_time and delta_accuracy
+                sign_total_time = "+" if delta_total_time > 0 else ("Neutral" if delta_total_time == 0 else "-")
+                sign_accuracy = "+" if delta_accuracy > 0 else ("Neutral" if delta_accuracy == 0 else "-")                
+
+
+                final_signal, factor = get_final_signal_and_factor(sign_accuracy, sign_total_time)
+
+                # Calculate lift            
+                if delta_total_time == 0 and delta_accuracy == 0:
+                    lift = 0  
+                elif delta_total_time == 0 and delta_accuracy != 0:
+                    lift = delta_accuracy  
+                elif delta_total_time != 0 and delta_accuracy == 0:
+                    lift = delta_total_time  
+                else:
+                    lift = delta_accuracy / delta_total_time  
+
+                lift *= final_signal
+                lift *= factor
                 lift = round(lift, 4)
 
-                # Determine the sign for delta_total_time and delta_accuracy
-                sign_total_time = "+" if delta_total_time >= 0 else "-"
-                sign_accuracy = "+" if delta_accuracy >= 0 else "-"
 
                 # Create a new row and add it to the results list
                 new_row = {
